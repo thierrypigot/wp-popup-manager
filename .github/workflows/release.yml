@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Create plugin zip
+        run: |
+          mkdir -p wp-popup-manager
+          cp -r build includes readme.txt uninstall.php wp-popup-manager.php LICENSE wp-popup-manager/
+          zip -r wp-popup-manager.zip wp-popup-manager/
+
+      - name: Create draft release with zip
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: wp-popup-manager.zip
+          generate_release_notes: false
