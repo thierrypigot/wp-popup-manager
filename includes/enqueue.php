@@ -121,7 +121,7 @@ function popup_manager_render_popup( WP_Post $popup ): string {
 	);
 
 	// Gutenberg content.
-	$content = apply_filters( 'the_content', $popup->post_content );
+	$content = apply_filters( 'the_content', $popup->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter.
 
 	// Global custom CSS classes.
 	$custom_classes = trim( $defaults['customCssClasses'] ?? '' );
@@ -133,7 +133,9 @@ function popup_manager_render_popup( WP_Post $popup ): string {
 		class="<?php echo esc_attr( $wrapper_class ); ?>"
 		data-popup-id="<?php echo esc_attr( $popup_id ); ?>"
 		data-wp-interactive="popup-manager"
-		<?php echo wp_interactivity_data_wp_context( $context ); ?>
+		<?php
+		echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core function, pre-escaped.
+		?>
 		data-wp-init="callbacks.initTrigger"
 		data-wp-on--keydown="actions.handleKeydown"
 		data-wp-watch="callbacks.watchOpenState"
