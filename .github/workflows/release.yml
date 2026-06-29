@@ -5,14 +5,16 @@ on:
     tags:
       - 'v*'
 
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+permissions:
+  contents: write
 
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - uses: actions/setup-node@v4
         with:
@@ -22,15 +24,20 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Create plugin zip
+      - name: Stage plugin folder
         run: |
-          mkdir -p wp-popup-manager
-          cp -r build includes readme.txt uninstall.php wp-popup-manager.php LICENSE wp-popup-manager/
-          zip -r wp-popup-manager.zip wp-popup-manager/
+          mkdir -p build-dist/wp-popup-manager
+          rsync -av --exclude-from='.distignore' \
+            --exclude='build-dist' --exclude='.git' --exclude='node_modules' \
+            ./ build-dist/wp-popup-manager/
 
-      - name: Create draft release with zip
+      - name: Create zip
+        run: |
+          cd build-dist
+          zip -r ../wp-popup-manager.zip wp-popup-manager
+
+      - name: Attach zip to release
         uses: softprops/action-gh-release@v2
         with:
-          draft: true
           files: wp-popup-manager.zip
-          generate_release_notes: false
+          generate_release_notes: true
