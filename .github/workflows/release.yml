@@ -27,12 +27,12 @@ jobs:
       - name: Compile translations (.po → .mo + JSON)
         run: |
           sudo apt-get install -y gettext
-          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          chmod +x wp-cli.phar
+          curl -o /tmp/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x /tmp/wp-cli.phar
           for po in languages/*.po; do
             msgfmt "$po" -o "${po%.po}.mo"
           done
-          php wp-cli.phar i18n make-json languages/ --no-purge --allow-root
+          php /tmp/wp-cli.phar i18n make-json languages/ --no-purge --allow-root
 
       - name: Stage plugin folder
         run: |
