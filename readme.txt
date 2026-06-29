@@ -8,126 +8,128 @@ Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered.
+Gestionnaire de popups accessibles, intégré nativement à Gutenberg — conforme RGAA/WCAG 2.2 AA, éco-conçu (RGESN), propulsé par l'Interactivity API.
 
 == Description ==
 
-WP Popup Manager is a WordPress popup plugin built from the ground up for the modern WordPress ecosystem:
+WP Popup Manager est une extension WordPress de gestion de popups conçue de A à Z pour l'écosystème WordPress moderne :
 
-= Full Gutenberg Integration =
+= Intégration Gutenberg complète =
 
-- Create popup content using any native Gutenberg block
-- Configure triggers, conditions, and display settings via sidebar panels
-- Trigger block uses native core/button for full styling control
-- No proprietary builder — your popups are standard WordPress content
+- Créez le contenu de vos popups avec n'importe quel bloc Gutenberg natif
+- Configurez les déclencheurs, conditions et apparence via les panneaux de la barre latérale
+- Le bloc déclencheur utilise le bouton natif core/button pour un contrôle total du style
+- Pas de constructeur propriétaire — vos popups sont du contenu WordPress standard
 
-= Accessibility First (RGAA / WCAG 2.2 AA) =
+= Accessibilité avant tout (RGAA / WCAG 2.2 AA) =
 
-- WAI-ARIA dialog/alertdialog pattern fully implemented
-- Focus trap (Tab/Shift+Tab confined to popup)
-- Focus restoration on close
-- Escape key closes the popup
-- aria-modal, aria-labelledby, inert on background content
-- prefers-reduced-motion respected
-- Live region announces popup to screen readers
-- Close button 44x44px minimum touch target
+- Patron WAI-ARIA dialog/alertdialog intégralement implémenté
+- Piège au focus (Tab/Shift+Tab confiné à la popup)
+- Restauration du focus à la fermeture
+- Touche Échap ferme la popup
+- aria-modal, aria-labelledby, inert sur le contenu en arrière-plan
+- prefers-reduced-motion respecté
+- Région live annonce la popup aux lecteurs d'écran
+- Bouton de fermeture 44x44px minimum (cible tactile)
 
-= Eco-Designed (RGESN) =
+= Éco-conception (RGESN) =
 
-- Zero impact when no popup is active: no JS, no CSS, no HTML injected
-- JS budget: < 3 KB gzip (Interactivity API store)
-- CSS budget: < 1.5 KB gzip
-- No network request at runtime (data inlined via Interactivity API context)
-- No external dependency, no third-party library
+- Zéro impact si aucune popup n'est active : aucun JS, CSS ou HTML injecté
+- Budget JS : moins de 3 Ko gzip (store Interactivity API)
+- Budget CSS : moins de 1,5 Ko gzip
+- Aucune requête réseau à l'exécution (données inlinées via le contexte Interactivity API)
+- Aucune dépendance externe, aucune bibliothèque tierce
 
-= Server-First Architecture =
+= Architecture server-first =
 
-- HTML rendered server-side (PHP)
-- WordPress Interactivity API for declarative hydration
-- WordPress 7-ready
+- HTML rendu côté serveur (PHP)
+- WordPress Interactivity API pour l'hydratation déclarative
+- Compatible WordPress 7
 
 == Installation ==
 
-1. Upload the `wp-popup-manager` folder to `/wp-content/plugins/`
-2. Activate the plugin in the Plugins menu
-3. Go to Popups > Add New to create your first popup
+1. Uploadez le dossier `wp-popup-manager` dans `/wp-content/plugins/`
+2. Activez l'extension dans le menu Extensions
+3. Rendez-vous dans Popups > Ajouter pour créer votre première popup
 
-== Usage ==
+== Utilisation ==
 
-1. Create a new Popup (Popups > Add New)
-2. Add content using Gutenberg blocks
-3. Configure the trigger in the sidebar (click, page load, scroll, exit intent, inactivity)
-4. Set display conditions (pages, post types, date range, time of day, user role, device, referrer)
-5. Choose appearance settings (animation, position grid, size, overlay with color picker)
-6. Set frequency (every visit, once per session, once per day, once ever)
-7. Optionally enable analytics (impressions/closes tracking via Beacon API)
-8. Publish
+1. Créez une nouvelle popup (Popups > Ajouter)
+2. Ajoutez du contenu avec des blocs Gutenberg
+3. Configurez le déclencheur dans la barre latérale (clic, chargement de page, défilement, exit intent, inactivité)
+4. Définissez les conditions d'affichage (pages, types de contenu, plage de dates, heure, rôle utilisateur, appareil, référent)
+5. Choisissez l'apparence (animation, grille de position, taille, overlay avec pipette de couleur)
+6. Définissez la fréquence (à chaque visite, une fois par session, une fois par jour, une seule fois)
+7. Activez optionnellement les analytics (suivi des impressions et fermetures via Beacon API)
+8. Publiez
 
-For click-triggered popups, insert a **Popup Trigger** block in any page or post content. The trigger uses a native core/button so you get full styling control.
+Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n'importe quelle page ou article. Le déclencheur utilise un bouton natif core/button pour un contrôle total du style.
 
-== Features ==
+== Fonctionnalités ==
 
-= Triggers (exclusive) =
-- Click (trigger button block)
-- Page load (configurable delay)
-- Scroll depth (configurable threshold %)
-- Exit intent (mouse leaves window)
-- Inactivity (configurable delay)
+= Déclencheurs (exclusifs) =
+- Clic (bloc bouton déclencheur)
+- Chargement de page (délai configurable)
+- Profondeur de défilement (seuil en % configurable)
+- Exit intent (souris quitte la fenêtre)
+- Inactivité (délai configurable)
 
-= Display Conditions (AND logic) =
-- Specific pages (include/exclude by title search)
-- Content types (post, page, product…)
-- Date range with start/end time
-- Time of day (daily recurring — supports overnight ranges)
-- User role (include/exclude, supports logged_out)
-- Device type (desktop, mobile, tablet)
-- Referrer URL pattern
+= Conditions d'affichage (logique ET) =
+- Pages spécifiques (inclure/exclure par recherche de titre)
+- Types de contenu (article, page, produit...)
+- Plage de dates avec heure de début/fin
+- Heure de la journée (récurrent quotidien, supporte les plages nocturnes)
+- Rôle utilisateur (inclure/exclure, supporte logged_out)
+- Type d'appareil (bureau, mobile, tablette)
+- Motif d'URL référent
 
-= Appearance =
-- Animations: fade, slide-up, scale, none
-- 9-position grid + fullscreen
-- Sizes: small (400px), medium (600px), large (800px)
-- Overlay with color picker and alpha channel
-- Close on overlay click (configurable)
-- Close on Escape key (configurable)
+= Apparence =
+- Animations : fondu, slide-up, scale, aucune
+- Grille de 9 positions + plein écran
+- Tailles : petite (400px), moyenne (600px), grande (800px)
+- Overlay avec pipette de couleur et canal alpha
+- Fermeture au clic sur l'overlay (configurable)
+- Fermeture à la touche Échap (configurable)
 
-= Frequency =
-- Every visit
-- Once per session (sessionStorage)
-- Once per day (localStorage with 24h expiry)
-- Once ever (localStorage permanent)
+= Fréquence =
+- À chaque visite
+- Une fois par session (sessionStorage)
+- Une fois par jour (localStorage avec expiration 24h)
+- Une seule fois (localStorage permanent)
 
 = Analytics (opt-in) =
-- Disabled by default (RGESN compliance)
-- Tracks impressions and closes per popup
-- Single HTTP request via Beacon API at pagehide
-- Data stored as post meta counters
+- Désactivé par défaut (conformité RGESN)
+- Suit les impressions et fermetures par popup
+- Requête HTTP unique via Beacon API au pagehide
+- Données stockées en post meta
 
-= Global Settings =
-- Default animation, position, frequency
-- Custom CSS classes
-- Full React admin page
+= Réglages globaux =
+- Animation, position et fréquence par défaut
+- Classes CSS personnalisées
+- Page d'administration React
 
 == Changelog ==
 
 = 1.0.2 =
 * Traductions internalisées dans le plugin (fr_FR incluse)
+* readme.txt traduit en français
+* Compatibilité déclarée avec WordPress 7.0
 
 = 1.0.1 =
 * Ajout des mises à jour automatiques via Plugin Update Checker (GitHub Releases)
 
 = 1.0.0 =
-* Initial release
-* Custom Post Type with native Gutenberg editor
-* Popup Trigger block (wraps native core/button for full styling)
-* Interactivity API store (open, close, focus trap, inert, Escape, focus restoration)
-* Triggers: click, page load, scroll depth, exit intent, inactivity
-* Conditions: pages, content types, date range with time, time of day, user role, device, referrer
-* Frequency: every visit, once per session, once per day, once ever
-* Animations: fade, slide-up, scale with prefers-reduced-motion support
-* 9-position grid + fullscreen
+* Version initiale
+* Custom Post Type avec l'éditeur Gutenberg natif
+* Bloc Popup Trigger (encapsule core/button pour un contrôle total du style)
+* Store Interactivity API (ouverture, fermeture, piège au focus, inert, Échap, restauration du focus)
+* Déclencheurs : clic, chargement de page, profondeur de défilement, exit intent, inactivité
+* Conditions : pages, types de contenu, plage de dates avec heure, heure de la journée, rôle utilisateur, appareil, référent
+* Fréquence : à chaque visite, une fois par session, une fois par jour, une seule fois
+* Animations : fondu, slide-up, scale avec support de prefers-reduced-motion
+* Grille de 9 positions + plein écran
 * Analytics opt-in via Beacon API
-* Full RGAA/WCAG 2.2 AA accessibility (dialog pattern, focus trap, live region, 44px touch targets)
-* Conditional loading — zero JS/CSS if zero popup active (RGESN)
-* Global settings page (React)
-* uninstall.php with safe cleanup (preserves popup content)
+* Accessibilité complète RGAA/WCAG 2.2 AA (patron dialog, piège au focus, région live, cibles tactiles 44px)
+* Chargement conditionnel — zéro JS/CSS si aucune popup active (RGESN)
+* Page de réglages globaux (React)
+* uninstall.php avec nettoyage sécurisé (préserve le contenu des popups)

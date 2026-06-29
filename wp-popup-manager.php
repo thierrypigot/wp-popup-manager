@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'POPUP_MANAGER_VERSION', '1.0.1' );
+define( 'POPUP_MANAGER_VERSION', '1.0.2' );
 define( 'POPUP_MANAGER_FILE', __FILE__ );
 define( 'POPUP_MANAGER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'POPUP_MANAGER_URL', plugin_dir_url( __FILE__ ) );
