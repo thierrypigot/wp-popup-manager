@@ -1,11 +1,12 @@
 {
 	"name": "wp-popup-manager",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"private": true,
 	"description": "Accessible WordPress popup manager — Full Gutenberg, WCAG 2.2 AA, RGESN eco-designed.",
 	"scripts": {
 		"build": "cross-env WP_EXPERIMENTAL_MODULES=true wp-scripts build",
-		"start": "cross-env WP_EXPERIMENTAL_MODULES=true wp-scripts start"
+		"start": "cross-env WP_EXPERIMENTAL_MODULES=true wp-scripts start",
+		"makepot": "wp i18n make-pot . languages/wp-popup-manager.pot --exclude=plugin-update-checker,node_modules,build-dist"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^31.7.0",

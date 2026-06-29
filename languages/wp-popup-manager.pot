@@ -1,0 +1,105 @@
+# Copyright (C) 2026 WeAre[WP]
+# This file is distributed under the same license as the WP Popup Manager plugin.
+# WeAre[WP] <contact@wearewp.pro>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Popup Manager 1.0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/thierrypigot/wp-popup-manager/issues\n"
+"POT-Creation-Date: 2026-06-29T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Domain: wp-popup-manager\n"
+
+#. Plugin Name of the plugin
+msgid "WP Popup Manager"
+msgstr ""
+
+#. Description of the plugin
+msgid "Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered."
+msgstr ""
+
+#. Author of the plugin
+msgid "WeAre[WP]"
+msgstr ""
+
+#: wp-popup-manager.php:87
+#: wp-popup-manager.php:88
+msgid "Popup Manager"
+msgstr ""
+
+#: includes/register-cpt.php:18
+msgctxt "Post type general name"
+msgid "Popups"
+msgstr ""
+
+#: includes/register-cpt.php:19
+msgctxt "Post type singular name"
+msgid "Popup"
+msgstr ""
+
+#: includes/register-cpt.php:20
+msgid "Popups"
+msgstr ""
+
+#: includes/register-cpt.php:21
+msgid "Add New"
+msgstr ""
+
+#: includes/register-cpt.php:22
+msgid "Add New Popup"
+msgstr ""
+
+#: includes/register-cpt.php:23
+msgid "Edit Popup"
+msgstr ""
+
+#: includes/register-cpt.php:24
+msgid "New Popup"
+msgstr ""
+
+#: includes/register-cpt.php:25
+msgid "View Popup"
+msgstr ""
+
+#: includes/register-cpt.php:26
+msgid "Search Popups"
+msgstr ""
+
+#: includes/register-cpt.php:27
+msgid "No popups found."
+msgstr ""
+
+#: includes/register-cpt.php:28
+msgid "No popups found in Trash."
+msgstr ""
+
+#: includes/register-cpt.php:29
+msgid "All Popups"
+msgstr ""
+
+#: includes/register-cpt.php:30
+msgid "Popup published."
+msgstr ""
+
+#: includes/register-cpt.php:31
+msgid "Popup updated."
+msgstr ""
+
+#: includes/register-cpt.php:48
+msgid "Popup title"
+msgstr ""
+
+#: includes/register-cpt.php:49
+msgid "Popup content…"
+msgstr ""
+
+#: includes/enqueue.php:182
+msgid "Close"
+msgstr ""

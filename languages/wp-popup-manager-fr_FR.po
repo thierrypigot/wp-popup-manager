@@ -1,0 +1,93 @@
+# Traduction française — WP Popup Manager
+# Copyright (C) 2026 WeAre[WP]
+# WeAre[WP] <contact@wearewp.pro>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Popup Manager 1.0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/thierrypigot/wp-popup-manager/issues\n"
+"POT-Creation-Date: 2026-06-29T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-06-29 17:38+0200\n"
+"Last-Translator: Thierry Pigot <thierry.pigot@wearewp.pro>\n"
+"Language-Team: French <contact@wearewp.pro>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Domain: wp-popup-manager\n"
+
+#: wp-popup-manager.php:87 wp-popup-manager.php:88
+msgid "Popup Manager"
+msgstr "Gestionnaire de popups"
+
+#: includes/register-cpt.php:18
+msgctxt "Post type general name"
+msgid "Popups"
+msgstr "Popups"
+
+#: includes/register-cpt.php:19
+msgctxt "Post type singular name"
+msgid "Popup"
+msgstr "Popup"
+
+#: includes/register-cpt.php:20
+msgid "Popups"
+msgstr "Popups"
+
+#: includes/register-cpt.php:21
+msgid "Add New"
+msgstr "Ajouter"
+
+#: includes/register-cpt.php:22
+msgid "Add New Popup"
+msgstr "Ajouter une popup"
+
+#: includes/register-cpt.php:23
+msgid "Edit Popup"
+msgstr "Modifier la popup"
+
+#: includes/register-cpt.php:24
+msgid "New Popup"
+msgstr "Nouvelle popup"
+
+#: includes/register-cpt.php:25
+msgid "View Popup"
+msgstr "Voir la popup"
+
+#: includes/register-cpt.php:26
+msgid "Search Popups"
+msgstr "Rechercher des popups"
+
+#: includes/register-cpt.php:27
+msgid "No popups found."
+msgstr "Aucune popup trouvée."
+
+#: includes/register-cpt.php:28
+msgid "No popups found in Trash."
+msgstr "Aucune popup dans la corbeille."
+
+#: includes/register-cpt.php:29
+msgid "All Popups"
+msgstr "Toutes les popups"
+
+#: includes/register-cpt.php:30
+msgid "Popup published."
+msgstr "Popup publiée."
+
+#: includes/register-cpt.php:31
+msgid "Popup updated."
+msgstr "Popup mise à jour."
+
+#: includes/register-cpt.php:48
+msgid "Popup title"
+msgstr "Titre de la popup"
+
+#: includes/register-cpt.php:49
+msgid "Popup content…"
+msgstr "Contenu de la popup…"
+
+#: includes/enqueue.php:182
+msgid "Close"
+msgstr "Fermer"

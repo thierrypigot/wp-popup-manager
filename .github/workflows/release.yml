@@ -24,6 +24,12 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Compile translations (.po → .mo)
+        run: |
+          for po in languages/*.po; do
+            msgfmt "$po" -o "${po%.po}.mo"
+          done
+
       - name: Stage plugin folder
         run: |
           mkdir -p build-dist/wp-popup-manager

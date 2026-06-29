@@ -2,9 +2,9 @@
 Contributors: wearewp
 Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.5
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,9 @@ For click-triggered popups, insert a **Popup Trigger** block in any page or post
 - Full React admin page
 
 == Changelog ==
+
+= 1.0.2 =
+* Traductions internalisées dans le plugin (fr_FR incluse)
 
 = 1.0.1 =
 * Ajout des mises à jour automatiques via Plugin Update Checker (GitHub Releases)
