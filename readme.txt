@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,8 +110,17 @@ Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n
 
 == Changelog ==
 
+= 1.0.4 =
+* Sécurité : rate limiting (60 req/min par IP) sur l'endpoint analytics public
+* Sécurité : vérification du post type et du statut avant écriture des compteurs analytics
+* Sécurité : limite à 10 événements maximum par requête analytics
+* Sécurité : validation stricte de `overlayColor` (regex couleur CSS via `sanitize_hex_color` + rgba/hsla)
+* Sécurité : `sanitize_callback` des enums de réglages valide l'appartenance à l'enum
+* Sécurité : condition de type inconnu retourne `false` par défaut (principe de moindre privilège)
+* Code : CSS admin injecté via `wp_add_inline_style()` au lieu de `echo <style>`
+
 = 1.0.3 =
-* Affichage des stats
+* Affichage des stats d'impressions dans la liste des popups
 
 = 1.0.2 =
 * Traductions internalisées dans le plugin (fr_FR incluse)

@@ -3,7 +3,7 @@
 [![WordPress 6.5+](https://img.shields.io/badge/WordPress-6.5%2B-21759b?logo=wordpress&logoColor=white)](https://wordpress.org)
 [![PHP 8.1+](https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white)](https://www.php.net)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL--2.0--or--later-blue)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-green)](#changelog)
+[![Version 1.0.4](https://img.shields.io/badge/version-1.0.4-green)](#changelog)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2%20AA-228B22)](#accessibility-first-rgaa--wcag-22-aa)
 [![RGESN](https://img.shields.io/badge/RGESN-eco--designed-2E8B57)](#eco-designed-rgesn)
 
@@ -116,6 +116,20 @@ For click-triggered popups, insert a **Popup Trigger** block in any page or post
 
 <details>
 <summary><strong>Changelog</strong></summary>
+
+### 1.0.4
+
+- Security: rate limiting (60 req/min per IP) on the public analytics endpoint
+- Security: post type and publish status check before writing analytics counters
+- Security: max 10 events per analytics request
+- Security: strict CSS color validation for `overlayColor` (`sanitize_hex_color` + rgba/hsla regex)
+- Security: settings enum `sanitize_callback` now validates enum membership
+- Security: unknown display condition type returns `false` by default (least privilege)
+- Code: admin column CSS injected via `wp_add_inline_style()` instead of raw `echo`
+
+### 1.0.3
+
+- Analytics impression count column in the popup list table
 
 ### 1.0.0
 
