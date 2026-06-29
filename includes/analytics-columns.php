@@ -48,12 +48,19 @@ function popup_manager_analytics_column_content( string $column, int $post_id ):
 	);
 }
 
-add_action( 'admin_head-edit.php', 'popup_manager_analytics_column_css' );
+add_action( 'admin_enqueue_scripts', 'popup_manager_analytics_column_css' );
 
-function popup_manager_analytics_column_css(): void {
+function popup_manager_analytics_column_css( string $hook ): void {
+	if ( 'edit.php' !== $hook ) {
+		return;
+	}
+
 	global $post_type;
 	if ( 'popup' !== $post_type ) {
 		return;
 	}
-	echo '<style>.column-popup_analytics { width: 160px; white-space: nowrap; } .popup-manager-stats { color: #50575e; font-variant-numeric: tabular-nums; }</style>';
+
+	wp_register_style( 'popup-manager-admin-columns', false );
+	wp_enqueue_style( 'popup-manager-admin-columns' );
+	wp_add_inline_style( 'popup-manager-admin-columns', '.column-popup_analytics { width: 160px; white-space: nowrap; } .popup-manager-stats { color: #50575e; font-variant-numeric: tabular-nums; }' );
 }

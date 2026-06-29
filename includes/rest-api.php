@@ -32,17 +32,26 @@ function popup_manager_register_rest_routes(): void {
 				'defaultAnimation' => array(
 					'type'              => 'string',
 					'enum'              => array( 'fade', 'slide-up', 'scale', 'none' ),
-					'sanitize_callback' => 'sanitize_key',
+					'sanitize_callback' => function ( $v ) {
+						$allowed = array( 'fade', 'slide-up', 'scale', 'none' );
+						return in_array( $v, $allowed, true ) ? $v : 'fade';
+					},
 				),
 				'defaultPosition'  => array(
 					'type'              => 'string',
 					'enum'              => array( 'center', 'top', 'top-left', 'top-right', 'center-left', 'center-right', 'bottom', 'bottom-left', 'bottom-right', 'fullscreen' ),
-					'sanitize_callback' => 'sanitize_key',
+					'sanitize_callback' => function ( $v ) {
+						$allowed = array( 'center', 'top', 'top-left', 'top-right', 'center-left', 'center-right', 'bottom', 'bottom-left', 'bottom-right', 'fullscreen' );
+						return in_array( $v, $allowed, true ) ? $v : 'center';
+					},
 				),
 				'defaultFrequency' => array(
 					'type'              => 'string',
 					'enum'              => array( 'always', 'once_per_session', 'once_per_day', 'once_ever' ),
-					'sanitize_callback' => 'sanitize_key',
+					'sanitize_callback' => function ( $v ) {
+						$allowed = array( 'always', 'once_per_session', 'once_per_day', 'once_ever' );
+						return in_array( $v, $allowed, true ) ? $v : 'always';
+					},
 				),
 				'customCssClasses' => array(
 					'type'              => 'string',
@@ -78,14 +87,31 @@ function popup_manager_register_rest_routes(): void {
 }
 
 /**
+ * Rate-limit analytics endpoint by IP (60 events per 60 seconds).
+ */
+function popup_manager_analytics_check_rate_limit(): bool {
+	$ip    = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+	$key   = 'popup_analytics_rl_' . md5( $ip );
+	$count = (int) get_transient( $key );
+
+	if ( $count >= 60 ) {
+		return false;
+	}
+
+	set_transient( $key, $count + 1, 60 );
+
+	return true;
+}
+
+/**
  * Record analytics events.
  */
 function popup_manager_rest_record_analytics( \WP_REST_Request $request ): \WP_REST_Response {
-	$events = $request->get_param( 'events' );
-
-	if ( ! is_array( $events ) ) {
-		return new \WP_REST_Response( array( 'ok' => false ), 400 );
+	if ( ! popup_manager_analytics_check_rate_limit() ) {
+		return new \WP_REST_Response( array( 'ok' => false ), 429 );
 	}
+
+	$events = array_slice( (array) $request->get_param( 'events' ), 0, 10 );
 
 	foreach ( $events as $event ) {
 		$popup_id = absint( $event['popupId'] ?? 0 );
@@ -95,10 +121,14 @@ function popup_manager_rest_record_analytics( \WP_REST_Request $request ): \WP_R
 			continue;
 		}
 
-		// Check that analytics is enabled for this popup.
-		$enabled = get_post_meta( $popup_id, '_popup_analytics_enabled', true );
+		// Verify the post exists and belongs to the popup CPT.
+		$post = get_post( $popup_id );
+		if ( ! $post || 'popup' !== $post->post_type || 'publish' !== $post->post_status ) {
+			continue;
+		}
 
-		if ( ! $enabled ) {
+		// Check that analytics is enabled for this popup.
+		if ( ! get_post_meta( $popup_id, '_popup_analytics_enabled', true ) ) {
 			continue;
 		}
 

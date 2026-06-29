@@ -337,11 +337,26 @@ function popup_manager_sanitize_display( $value ): array {
 		: $defaults['size'];
 
 	$clean['overlay']             = isset( $value['overlay'] ) ? (bool) $value['overlay'] : $defaults['overlay'];
-	$clean['overlayColor']        = isset( $value['overlayColor'] ) ? sanitize_text_field( $value['overlayColor'] ) : $defaults['overlayColor'];
+	$clean['overlayColor']        = isset( $value['overlayColor'] ) ? popup_manager_sanitize_color( $value['overlayColor'] ) : $defaults['overlayColor'];
 	$clean['closeOnOverlayClick'] = isset( $value['closeOnOverlayClick'] ) ? (bool) $value['closeOnOverlayClick'] : $defaults['closeOnOverlayClick'];
 	$clean['closeOnEsc']          = isset( $value['closeOnEsc'] ) ? (bool) $value['closeOnEsc'] : $defaults['closeOnEsc'];
 
 	return $clean;
+}
+
+function popup_manager_sanitize_color( string $value ): string {
+	$value = trim( $value );
+
+	$hex = sanitize_hex_color( $value );
+	if ( $hex ) {
+		return $hex;
+	}
+
+	if ( preg_match( '/^rgba?\(\s*[\d.,\s%]+\)$|^hsla?\(\s*[\d.,\s%]+\)$/', $value ) ) {
+		return $value;
+	}
+
+	return 'rgba(0,0,0,0.5)';
 }
 
 function popup_manager_sanitize_frequency( $value ): array {

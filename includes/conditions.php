@@ -242,7 +242,7 @@ function popup_manager_evaluate_condition( array $condition, int $queried_object
 			return false !== stripos( $referrer, $pattern );
 
 		default:
-			// Unknown condition type → consider it as met.
-			return true;
+			// Unknown condition type → deny by default (principle of least privilege).
+			return false;
 	}
 }
