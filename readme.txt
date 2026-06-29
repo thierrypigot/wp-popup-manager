@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.5
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,9 @@ Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n
 - Page d'administration React
 
 == Changelog ==
+
+= 1.0.3 =
+* Affichage des stats
 
 = 1.0.2 =
 * Traductions internalisées dans le plugin (fr_FR incluse)
