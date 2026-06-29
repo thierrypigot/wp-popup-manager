@@ -24,7 +24,7 @@ define( 'POPUP_MANAGER_URL', plugin_dir_url( __FILE__ ) );
 
 add_action( 'init', function () {
 	load_plugin_textdomain( 'wp-popup-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-}, 11 );
+}, 1 );
 
 require_once POPUP_MANAGER_PATH . 'plugin-update-checker/plugin-update-checker.php';
 
@@ -124,5 +124,11 @@ add_action( 'admin_enqueue_scripts', function ( string $hook ) {
 		POPUP_MANAGER_URL . 'build/editor/settings-page.css',
 		array( 'wp-components' ),
 		$asset['version']
+	);
+
+	wp_set_script_translations(
+		'popup-manager-settings',
+		'wp-popup-manager',
+		POPUP_MANAGER_PATH . 'languages'
 	);
 } );

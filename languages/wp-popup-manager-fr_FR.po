@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: WP Popup Manager 1.0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/thierrypigot/wp-popup-manager/issues\n"
 "POT-Creation-Date: 2026-06-29T00:00:00+00:00\n"
-"PO-Revision-Date: 2026-06-29 17:38+0200\n"
+"PO-Revision-Date: 2026-06-29 18:30+0200\n"
 "Last-Translator: Thierry Pigot <thierry.pigot@wearewp.pro>\n"
 "Language-Team: French <contact@wearewp.pro>\n"
 "Language: fr_FR\n"
@@ -88,6 +88,515 @@ msgstr "Titre de la popup"
 msgid "Popup content…"
 msgstr "Contenu de la popup…"
 
+#: build/blocks/popup/index.js:1
 #: includes/enqueue.php:182
+#: src/blocks/popup/edit.js:26
 msgid "Close"
 msgstr "Fermer"
+
+#. Plugin Name of the plugin
+#: wp-popup-manager.php
+msgid "WP Popup Manager"
+msgstr "WP Popup Manager"
+
+#. Description of the plugin
+#: wp-popup-manager.php
+msgid "Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered."
+msgstr "Gestionnaire de popups accessible intégré nativement à Gutenberg — conforme RGAA/WCAG 2.2 AA, éco-conçu (RGESN), propulsé par l'Interactivity API."
+
+#. Author of the plugin
+#: wp-popup-manager.php
+msgid "WeAre[WP]"
+msgstr "WeAre[WP]"
+
+#. Author URI of the plugin
+#: wp-popup-manager.php
+msgid "https://www.wearewp.pro"
+msgstr "https://www.wearewp.pro"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:29
+msgid "— Select a popup —"
+msgstr "— Sélectionner une popup —"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:39
+msgid "Popup trigger"
+msgstr "Déclencheur de popup"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:41
+msgid "Popup to open"
+msgstr "Popup à ouvrir"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:57
+msgid "Learn more"
+msgstr "En savoir plus"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:65
+msgid "Popup Trigger"
+msgstr "Déclencheur de popup"
+
+#: build/blocks/popup-trigger/index.js:1
+#: src/blocks/popup-trigger/edit.js:66
+msgid "Select a popup in the block settings."
+msgstr "Sélectionnez une popup dans les réglages du bloc."
+
+#: build/blocks/popup/index.js:1
+#: src/blocks/popup/edit.js:20
+msgid "Popup"
+msgstr "Popup"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:81
+msgid "WP Popup Manager — Settings"
+msgstr "WP Popup Manager — Réglages"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:99
+msgid "Default values"
+msgstr "Valeurs par défaut"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:105
+msgid "Default animation"
+msgstr "Animation par défaut"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:108
+#: src/editor/sidebar-panel.js:480
+msgid "Fade"
+msgstr "Fondu"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:109
+#: src/editor/sidebar-panel.js:481
+msgid "Slide up"
+msgstr "Glisser vers le haut"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:110
+#: src/editor/sidebar-panel.js:482
+msgid "Scale"
+msgstr "Zoom"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:111
+#: src/editor/sidebar-panel.js:483
+msgid "None"
+msgstr "Aucune"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:117
+msgid "Default position"
+msgstr "Position par défaut"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:120
+msgid "Center"
+msgstr "Centre"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:121
+msgid "Top"
+msgstr "Haut"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:122
+msgid "Top left"
+msgstr "Haut gauche"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:123
+msgid "Top right"
+msgstr "Haut droite"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:124
+msgid "Center left"
+msgstr "Centre gauche"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:125
+msgid "Center right"
+msgstr "Centre droite"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:126
+msgid "Bottom"
+msgstr "Bas"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:127
+msgid "Bottom left"
+msgstr "Bas gauche"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:128
+msgid "Bottom right"
+msgstr "Bas droite"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:129
+#: src/editor/sidebar-panel.js:537
+msgid "Fullscreen"
+msgstr "Plein écran"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:135
+msgid "Default frequency"
+msgstr "Fréquence par défaut"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:138
+#: src/editor/sidebar-panel.js:617
+msgid "Every visit"
+msgstr "À chaque visite"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:139
+#: src/editor/sidebar-panel.js:618
+msgid "Once per session"
+msgstr "Une fois par session"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:140
+#: src/editor/sidebar-panel.js:619
+msgid "Once per day"
+msgstr "Une fois par jour"
+
+#: build/editor/settings-page.js:1
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings-page.js:141
+#: src/editor/sidebar-panel.js:620
+msgid "Once ever"
+msgstr "Une seule fois"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:147
+msgid "Custom CSS classes"
+msgstr "Classes CSS personnalisées"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:150
+msgid "Classes added to each popup wrapper (space-separated)."
+msgstr "Classes ajoutées à chaque conteneur de popup (séparées par des espaces)."
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:55
+msgid "Settings saved."
+msgstr "Réglages enregistrés."
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:60
+msgid "Error saving settings."
+msgstr "Erreur lors de l'enregistrement des réglages."
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:162
+msgid "Saving…"
+msgstr "Enregistrement…"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:163
+msgid "Save"
+msgstr "Enregistrer"
+
+#: build/editor/settings-page.js:1
+#: src/editor/settings-page.js:72
+msgid "Loading settings…"
+msgstr "Chargement des réglages…"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:80
+msgid "Trigger"
+msgstr "Déclencheur"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:85
+msgid "Trigger type"
+msgstr "Type de déclencheur"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:88
+msgid "Click (trigger button)"
+msgstr "Clic (bouton déclencheur)"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:89
+msgid "Page load"
+msgstr "Chargement de la page"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:90
+msgid "Scroll depth"
+msgstr "Profondeur de défilement"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:91
+msgid "Exit intent (mouse)"
+msgstr "Intention de sortie (souris)"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:92
+msgid "Inactivity"
+msgstr "Inactivité"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:99
+msgid "Delay (seconds)"
+msgstr "Délai (secondes)"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:110
+msgid "Scroll threshold (%)"
+msgstr "Seuil de défilement (%)"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:116
+msgid "Popup opens when the user scrolls past this percentage of the page."
+msgstr "La popup s'ouvre quand l'utilisateur dépasse ce pourcentage de la page."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:122
+msgid "Inactivity delay (seconds)"
+msgstr "Délai d'inactivité (secondes)"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:128
+msgid "Popup opens after this many seconds without user interaction."
+msgstr "La popup s'ouvre après ce nombre de secondes sans interaction."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:134
+msgid "This popup opens without user action. This may disrupt navigation for people using assistive technologies. Consider using a click trigger if possible."
+msgstr "Cette popup s'ouvre sans action de l'utilisateur. Cela peut perturber la navigation des personnes utilisant des technologies d'assistance. Préférez un déclencheur au clic si possible."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:183
+#: src/editor/sidebar-panel.js:385
+msgid "Operator"
+msgstr "Opérateur"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:186
+#: src/editor/sidebar-panel.js:388
+msgid "Include"
+msgstr "Inclure"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:187
+#: src/editor/sidebar-panel.js:389
+msgid "Exclude"
+msgstr "Exclure"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:192
+msgid "Pages"
+msgstr "Pages"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:242
+msgid "Display Conditions"
+msgstr "Conditions d'affichage"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:248
+msgid "Specific pages"
+msgstr "Pages spécifiques"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:269
+#: src/editor/sidebar-panel.js:281
+msgid "Content types"
+msgstr "Types de contenu"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:290
+msgid "Date range"
+msgstr "Plage de dates"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:303
+msgid "Start date"
+msgstr "Date de début"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:311
+msgid "End date"
+msgstr "Date de fin"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:319
+msgid "Start time"
+msgstr "Heure de début"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:327
+msgid "End time"
+msgstr "Heure de fin"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:338
+msgid "Time of day"
+msgstr "Heure de la journée"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:351
+msgid "From"
+msgstr "De"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:359
+msgid "To"
+msgstr "À"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:365
+msgid "Supports overnight ranges (e.g. 22:00 to 06:00)."
+msgstr "Prend en charge les plages nocturnes (ex. 22:00 à 06:00)."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:372
+msgid "User role"
+msgstr "Rôle utilisateur"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:394
+msgid "User roles"
+msgstr "Rôles utilisateurs"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:404
+msgid "Device type"
+msgstr "Type d'appareil"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:416
+msgid "Devices"
+msgstr "Appareils"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:426
+msgid "Referrer URL"
+msgstr "URL de référence"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:438
+msgid "URL pattern"
+msgstr "Motif d'URL"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:443
+msgid "Example: google.com, facebook.com"
+msgstr "Exemple : google.com, facebook.com"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:472
+msgid "Appearance"
+msgstr "Apparence"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:477
+msgid "Animation"
+msgstr "Animation"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:490
+#: src/editor/sidebar-panel.js:499
+msgid "Position"
+msgstr "Position"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:547
+msgid "Size"
+msgstr "Taille"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:552
+msgid "Small"
+msgstr "Petit"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:553
+msgid "Medium"
+msgstr "Moyen"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:554
+msgid "Large"
+msgstr "Grand"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:558
+msgid "Show overlay"
+msgstr "Afficher le fond"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:567
+msgid "Overlay color"
+msgstr "Couleur du fond"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:576
+msgid "Close on overlay click"
+msgstr "Fermer au clic sur le fond"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:584
+msgid "Close with Escape key"
+msgstr "Fermer avec la touche Échap"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:609
+msgid "Frequency & Analytics"
+msgstr "Fréquence et statistiques"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:614
+msgid "Show popup"
+msgstr "Afficher la popup"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:626
+msgid "Enable analytics"
+msgstr "Activer les statistiques"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:629
+msgid "Tracks impressions and closes. Adds 1 HTTP request per page view containing this popup."
+msgstr "Suit les impressions et les fermetures. Ajoute 1 requête HTTP par page vue contenant cette popup."
+
+#: build/blocks/popup-trigger/block.json
+#: src/blocks/popup-trigger/block.json
+msgctxt "block title"
+msgid "Popup Trigger"
+msgstr "Déclencheur de popup"
+
+#: build/blocks/popup-trigger/block.json
+#: src/blocks/popup-trigger/block.json
+msgctxt "block description"
+msgid "Wraps a button to trigger a popup on click."
+msgstr "Encapsule un bouton pour déclencher une popup au clic."
+
+#: build/blocks/popup/block.json
+#: src/blocks/popup/block.json
+msgctxt "block title"
+msgid "Popup"
+msgstr "Popup"
+
+#: build/blocks/popup/block.json
+#: src/blocks/popup/block.json
+msgctxt "block description"
+msgid "Accessible popup with Interactivity API support."
+msgstr "Popup accessible avec support de l'Interactivity API."
