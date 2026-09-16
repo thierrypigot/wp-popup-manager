@@ -9,6 +9,13 @@
 
 > Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered.
 
+> [!IMPORTANT]
+> **Download the plugin from the [latest release](https://github.com/thierrypigot/wp-popup-manager/releases/latest), not from the green "Code" button.**
+>
+> Use the `wp-popup-manager.zip` file listed under **Assets**. It is the only installable archive: it contains the compiled JS/CSS and the bundled update library.
+>
+> The source ZIP from the "Code" button (or a `git clone` without `--recurse-submodules`) ships without the `build/` folder and with an empty `plugin-update-checker/` folder, which makes WordPress fail with *"The plugin could not be activated because it triggered a fatal error."*
+
 ## Description
 
 WP Popup Manager is a WordPress popup plugin built from the ground up for the modern WordPress ecosystem.
@@ -47,10 +54,13 @@ WP Popup Manager is a WordPress popup plugin built from the ground up for the mo
 
 ## Installation
 
-1. Download the latest release or clone this repository
-2. Upload the `wp-popup-manager` folder to `/wp-content/plugins/`
+1. Download `wp-popup-manager.zip` from the [latest release](https://github.com/thierrypigot/wp-popup-manager/releases/latest) (**Assets** section)
+2. In WordPress, go to **Plugins > Add New > Upload Plugin**, select the ZIP as is and click **Install Now**
+   *(FTP alternative: unzip it locally, then upload the resulting `wp-popup-manager` folder to `/wp-content/plugins/`)*
 3. Activate the plugin in the Plugins menu
 4. Go to **Popups > Add New** to create your first popup
+
+> Building from source? Clone with `git clone --recurse-submodules`, then run `npm ci && npm run build` before uploading.
 
 ## Usage
 
