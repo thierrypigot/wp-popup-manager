@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       WP Popup Manager
  * Description:       Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered.
- * Version:           1.0.4
- * Requires at least: 6.5
+ * Version:           1.1.0
+ * Requires at least: 6.6
  * Requires PHP:      8.1
  * Author:            WeAre[WP]
  * Author URI:        https://www.wearewp.pro
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'POPUP_MANAGER_VERSION', '1.0.4' );
+define( 'POPUP_MANAGER_VERSION', '1.1.0' );
 define( 'POPUP_MANAGER_FILE', __FILE__ );
 define( 'POPUP_MANAGER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'POPUP_MANAGER_URL', plugin_dir_url( __FILE__ ) );
@@ -38,6 +38,7 @@ $wppm_update_checker = PucFactory::buildUpdateChecker(
 $wppm_update_checker->getVcsApi()->enableReleaseAssets();
 
 require_once POPUP_MANAGER_PATH . 'includes/register-cpt.php';
+require_once POPUP_MANAGER_PATH . 'includes/block-styles.php';
 require_once POPUP_MANAGER_PATH . 'includes/conditions.php';
 require_once POPUP_MANAGER_PATH . 'includes/enqueue.php';
 require_once POPUP_MANAGER_PATH . 'includes/rest-api.php';

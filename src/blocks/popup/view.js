@@ -67,6 +67,64 @@ function getFocusables( dialog ) {
 }
 
 /**
+ * Scroll hint and keyboard reachability of the scrolling region.
+ *
+ * The content is what scrolls inside the dialog, so it gets:
+ * - .has-overflow while there is more to read, .is-at-end once the bottom is
+ *   reached, which drive the fade at the bottom edge;
+ * - tabindex="0" when it holds no focusable element of its own, so the region
+ *   stays operable with the keyboard (WCAG 2.1.1 / RGAA).
+ */
+const scrollHints = new WeakMap();
+
+function setupScrollHint( dialog ) {
+	const content = dialog?.querySelector( '.popup-manager-content' );
+
+	if ( ! content || scrollHints.has( content ) ) {
+		return;
+	}
+
+	const update = () => {
+		const hasOverflow = content.scrollHeight > content.clientHeight + 1;
+		const atEnd =
+			content.scrollTop + content.clientHeight >= content.scrollHeight - 2;
+
+		content.classList.toggle( 'has-overflow', hasOverflow );
+		content.classList.toggle( 'is-at-end', atEnd );
+
+		if ( hasOverflow && getFocusables( content ).length === 0 ) {
+			content.setAttribute( 'tabindex', '0' );
+		} else {
+			content.removeAttribute( 'tabindex' );
+		}
+	};
+
+	// Images and third party embeds change the height after the popup opens.
+	const observer = new ResizeObserver( update );
+	observer.observe( content );
+	for ( const child of content.children ) {
+		observer.observe( child );
+	}
+
+	content.addEventListener( 'scroll', update, { passive: true } );
+	scrollHints.set( content, { observer, update } );
+	update();
+}
+
+function teardownScrollHint( dialog ) {
+	const content = dialog?.querySelector( '.popup-manager-content' );
+	const hint = content && scrollHints.get( content );
+
+	if ( ! hint ) {
+		return;
+	}
+
+	hint.observer.disconnect();
+	content.removeEventListener( 'scroll', hint.update );
+	scrollHints.delete( content );
+}
+
+/**
  * Apply/remove inert on the main page content.
  */
 function togglePageInert( add ) {
@@ -290,6 +348,8 @@ const { state, actions } = store(
 					const isAutoTrigger = ctx.triggerType !== 'click';
 
 					requestAnimationFrame( () => {
+						setupScrollHint( dialog );
+
 						if ( isAutoTrigger ) {
 							// For auto-triggered popups (alertdialog), focus the close
 							// button first so the user can dismiss immediately.
@@ -310,6 +370,8 @@ const { state, actions } = store(
 							dialog.focus();
 						}
 					} );
+				} else {
+					teardownScrollHint( getDialog( ref ) );
 				}
 			},
 

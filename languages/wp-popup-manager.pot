@@ -614,3 +614,26 @@ msgstr ""
 msgctxt "block description"
 msgid "Accessible popup with Interactivity API support."
 msgstr ""
+
+#: includes/block-styles.php:28
+msgid "Framed"
+msgstr ""
+
+#: includes/block-styles.php:37
+msgid "Borderless"
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:468
+msgid "Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:495
+msgid "This popup has no Popup block at the root, so its frame cannot be customised."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:501
+msgid "Customize the frame"
+msgstr ""

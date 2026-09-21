@@ -1,6 +1,12 @@
 /**
- * Popup structural styles.
+ * Popup structural styles (front + editor iframe).
  * Budget : < 1.5 KB gzip total.
+ *
+ * The dialog "frame" (background, text color, padding, radius, shadow) is
+ * expressed with custom properties so it can be overridden by:
+ * - global styles / theme.json  (styles.blocks["popup-manager/popup"])
+ * - the Popup block inspector   (inline style on .popup-manager-dialog)
+ * - the block style variations  (.is-style-borderless)
  */
 
 /* ===== Wrapper ===== */
@@ -25,90 +31,116 @@
 	inset: 0;
 }
 
-/* ===== Dialog ===== */
+/* ===== Dialog — frame (shared with the editor preview) ===== */
 
 .popup-manager-dialog {
+	background: var(--pm-dialog-bg, #fff);
+	color: var(--pm-dialog-color, #1e1e1e);
+	border-radius: var(--pm-dialog-radius, 8px);
+	padding: var(--pm-dialog-padding, 2rem);
+	box-shadow: var(--pm-dialog-shadow, 0 4px 24px rgba(0, 0, 0, 0.15));
+}
+
+/* Style variation — "Borderless".
+   Duplicated as custom properties so the variation renders identically
+   whether or not the core style_data CSS is available. */
+.popup-manager-dialog.is-style-borderless {
+	--pm-dialog-bg: transparent;
+	--pm-dialog-padding: 0;
+	--pm-dialog-shadow: none;
+	--pm-content-offset: 0;
+	--pm-fullscreen-inset: 0;
+}
+
+/* ===== Dialog — layout (front only) ===== */
+
+/* The dialog is a fixed frame and the content scrolls inside it: the close
+   button stays in place, and the scrollbar sits inside the padding instead of
+   cutting across the rounded corners and the shadow. */
+.popup-manager-wrapper .popup-manager-dialog {
 	position: fixed;
 	z-index: 100000;
 	width: calc(100% - 2rem);
-	background: #fff;
-	color: #1e1e1e;
-	border-radius: 8px;
-	padding: 2rem;
-	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	/* dvh follows the mobile URL bar; vh stays as a fallback. */
 	max-height: 90vh;
+	max-height: 90dvh;
 }
 
 /* Positions — 9-grid + fullscreen */
-.popup-manager-dialog[data-position="center"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="center"] {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
-.popup-manager-dialog[data-position="top"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="top"] {
 	top: 1rem;
 	left: 50%;
 	transform: translateX(-50%);
 }
 
-.popup-manager-dialog[data-position="top-left"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="top-left"] {
 	top: 1rem;
 	left: 1rem;
 }
 
-.popup-manager-dialog[data-position="top-right"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="top-right"] {
 	top: 1rem;
 	right: 1rem;
 }
 
-.popup-manager-dialog[data-position="center-left"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="center-left"] {
 	top: 50%;
 	left: 1rem;
 	transform: translateY(-50%);
 }
 
-.popup-manager-dialog[data-position="center-right"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="center-right"] {
 	top: 50%;
 	right: 1rem;
 	transform: translateY(-50%);
 }
 
-.popup-manager-dialog[data-position="bottom"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="bottom"] {
 	bottom: 1rem;
 	left: 50%;
 	transform: translateX(-50%);
 }
 
-.popup-manager-dialog[data-position="bottom-left"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="bottom-left"] {
 	bottom: 1rem;
 	left: 1rem;
 }
 
-.popup-manager-dialog[data-position="bottom-right"] {
+.popup-manager-wrapper .popup-manager-dialog[data-position="bottom-right"] {
 	bottom: 1rem;
 	right: 1rem;
 }
 
-.popup-manager-dialog[data-position="fullscreen"] {
+/* Fullscreen overrides the frame through the variables, so an explicit
+   padding or radius set on the block still wins. */
+.popup-manager-wrapper .popup-manager-dialog[data-position="fullscreen"] {
+	--pm-dialog-radius: 0;
+	--pm-dialog-padding: 0;
 	inset: 0;
 	width: 100vw;
 	max-width: 100vw;
 	max-height: 100vh;
-	border-radius: 0;
-	padding: 0;
-	overflow: hidden;
+	max-height: 100dvh;
 	box-sizing: border-box;
 }
 
-.popup-manager-dialog[data-position="fullscreen"] .popup-manager-content {
-	max-height: calc(100vh - 3.5rem);
-	padding: 0 2rem 2rem;
-	overflow-y: auto;
+.popup-manager-wrapper .popup-manager-dialog[data-position="fullscreen"] .popup-manager-content {
+	--pm-content-offset: 0;
+	padding-right: var(--pm-fullscreen-inset, 2rem);
+	padding-bottom: var(--pm-fullscreen-inset, 2rem);
+	padding-left: var(--pm-fullscreen-inset, 2rem);
 }
 
-.popup-manager-dialog[data-position="fullscreen"] .popup-manager-close {
+.popup-manager-wrapper .popup-manager-dialog[data-position="fullscreen"] .popup-manager-close {
 	position: fixed;
 	top: 0.5rem;
 	right: 0.5rem;
@@ -130,6 +162,8 @@
 
 /* ===== Close button ===== */
 
+/* Keeps its own background and color whatever the dialog frame looks like,
+   so the 4.5:1 contrast and the 44px target hold in every variation. */
 .popup-manager-close {
 	position: absolute;
 	top: 0.75rem;
@@ -152,7 +186,12 @@
 
 /* Reserve top space for the close button */
 .popup-manager-content {
-	padding-top: 2rem;
+	padding-top: var(--pm-content-offset, 2rem);
+	flex: 1 1 auto;
+	min-height: 0; /* without it a flex child never scrolls */
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: thin;
 }
 
 .popup-manager-close:hover {
@@ -193,6 +232,31 @@
 
 .popup-manager-content > :last-child {
 	margin-bottom: 0;
+}
+
+/* Scroll hint: the bottom edge fades out while there is more to read, and
+   clears once the end is reached. Both classes are toggled in view.js.
+   Works on any background, including the transparent "Borderless" variation. */
+@property --pm-fade {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 0px;
+}
+
+.popup-manager-content.has-overflow {
+	--pm-fade: 3rem;
+	-webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--pm-fade)), transparent);
+	mask-image: linear-gradient(to bottom, #000 calc(100% - var(--pm-fade)), transparent);
+}
+
+.popup-manager-content.has-overflow.is-at-end {
+	--pm-fade: 0px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.popup-manager-content.has-overflow {
+		transition: --pm-fade 200ms ease;
+	}
 }
 
 /* ===== Animations ===== */
@@ -264,58 +328,4 @@
 
 html.has-popup-open {
 	overflow: hidden;
-}
-
-/* ===== Editor styles ===== */
-
-.popup-manager-editor-preview {
-	padding: 0;
-}
-
-.popup-manager-editor-dialog {
-	position: relative;
-	border: 2px dashed #3858e9;
-	border-radius: 8px;
-	padding: 1.5rem;
-	background: #fff;
-	min-height: 120px;
-}
-
-.popup-manager-editor-header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 1rem;
-	padding-bottom: 0.75rem;
-	border-bottom: 1px solid #e0e0e0;
-}
-
-.popup-manager-editor-badge {
-	display: inline-block;
-	padding: 0.15rem 0.5rem;
-	background: #3858e9;
-	color: #fff;
-	border-radius: 3px;
-	font-size: 0.75rem;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-}
-
-.popup-manager-editor-close {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 2rem;
-	height: 2rem;
-	padding: 0;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	background: transparent;
-	color: #757575;
-	cursor: default;
-}
-
-.popup-manager-editor-content {
-	min-height: 60px;
 }

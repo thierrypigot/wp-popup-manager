@@ -1,10 +1,10 @@
 === WP Popup Manager ===
 Contributors: wearewp
 Tags: popup, modal, gutenberg, accessible, interactivity-api
-Requires at least: 6.5
+Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.4
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,55 @@ Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n
 - Fermeture au clic sur l'overlay (configurable)
 - Fermeture à la touche Échap (configurable)
 
+= Personnalisation du cadre =
+
+Le cadre de la popup (fond, couleur du texte, marges intérieures, rayon, ombre) se pilote nativement depuis Gutenberg, à trois niveaux.
+
+**1. Par popup** — sélectionnez le bloc **Popup** dans l'éditeur de la popup et utilisez les réglages de la barre latérale du bloc (Couleurs, Dimensions, Bordure, Ombre). L'aperçu dans l'éditeur est identique au rendu au front.
+
+**2. Styles globaux** — Éditeur de site > Styles > Blocs > Popup. Les valeurs définies là s'appliquent à toutes les popups du site.
+
+**3. theme.json** — un thème peut définir le cadre par défaut :
+
+`
+{
+	"version": 3,
+	"styles": {
+		"blocks": {
+			"popup-manager/popup": {
+				"color": { "background": "#111111", "text": "#ffffff" },
+				"spacing": { "padding": { "top": "3rem", "right": "3rem", "bottom": "3rem", "left": "3rem" } },
+				"border": { "radius": "0px" }
+			}
+		}
+	}
+}
+`
+
+= Variations de style =
+
+Deux variations sont disponibles dans l'onglet Styles du bloc Popup :
+
+- **Cadre** (par défaut) — fond blanc, marges de 2rem, rayon de 8px, ombre portée
+- **Sans cadre** — fond transparent, aucune marge, aucune ombre : le contenu occupe toute la popup, bord à bord. Utile pour un formulaire tiers embarqué (Brevo, Mailchimp) ou une image pleine largeur.
+
+= Propriétés personnalisées CSS =
+
+Le cadre s'appuie sur des variables CSS, surchargeables depuis un thème enfant ou la CSS additionnelle :
+
+- `--pm-dialog-bg` — fond de la popup (défaut : `#fff`)
+- `--pm-dialog-color` — couleur du texte (défaut : `#1e1e1e`)
+- `--pm-dialog-padding` — marges intérieures (défaut : `2rem`)
+- `--pm-dialog-radius` — rayon des angles (défaut : `8px`)
+- `--pm-dialog-shadow` — ombre portée (défaut : `0 4px 24px rgba(0, 0, 0, 0.15)`)
+- `--pm-content-offset` — espace réservé en haut pour le bouton de fermeture (défaut : `2rem`)
+- `--pm-fullscreen-inset` — marges du contenu en plein écran (défaut : `2rem`)
+- `--pm-fade` — hauteur du fondu de défilement en bas du contenu (défaut : `3rem` quand il reste du contenu, `0px` en bas de liste)
+
+Le bouton de fermeture conserve son propre fond et sa propre couleur quelle que soit la variation, afin de garantir un contraste minimum de 4,5:1 et une cible tactile de 44 px.
+
+Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine : elles s'affichent exactement comme avant. Pour les rendre personnalisables, ouvrez la popup et cliquez sur **Personnaliser le cadre** dans le panneau Apparence de la barre latérale. L'action est annulable avec Ctrl+Z.
+
 = Fréquence =
 - À chaque visite
 - Une fois par session (sessionStorage)
@@ -109,6 +158,19 @@ Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n
 - Page d'administration React
 
 == Changelog ==
+
+= 1.1.0 =
+* Cadre de la popup pilotable depuis Gutenberg : fond, couleur du texte, marges intérieures, rayon et ombre réglables sur le bloc Popup, dans les styles globaux (Styles > Blocs > Popup) et dans le `theme.json` d'un thème
+* Variations de style « Cadre » (par défaut) et « Sans cadre » (contenu bord à bord, pour les formulaires tiers embarqués)
+* Aperçu dans l'éditeur fidèle au rendu au front (mêmes styles, même largeur selon la taille choisie)
+* Bouton « Personnaliser le cadre » pour encapsuler une popup existante dans le bloc Popup, sans migration automatique en base
+* Défilement : c'est désormais le contenu qui défile à l'intérieur du cadre, et non plus la popup entière. Le bouton de fermeture reste visible pendant le défilement et la barre de défilement ne chevauche plus les angles arrondis ni l'ombre
+* Défilement : un fondu en bas du contenu signale qu'il reste quelque chose à lire, et disparaît une fois le bas atteint. Fonctionne sur fond transparent (variation « Sans cadre »)
+* Accessibilité : la zone de défilement de la popup devient atteignable au clavier quand le contenu ne comporte aucun élément focalisable (WCAG 2.1.1)
+* Mobile : hauteur maximale en `dvh` (avec repli en `vh`) pour tenir compte de la barre d'URL
+* CSS du cadre exposée en propriétés personnalisées (`--pm-dialog-*`)
+* Les styles de l'éditeur ne sont plus chargés au front (CSS front allégée)
+* WordPress 6.6 minimum requis (variations de style avec `style_data`)
 
 = 1.0.4 =
 * Sécurité : rate limiting (60 req/min par IP) sur l'endpoint analytics public

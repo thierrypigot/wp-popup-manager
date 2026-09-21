@@ -56,6 +56,93 @@ function popup_manager_maybe_enqueue(): void {
 }
 
 /**
+ * Read the attributes of the Popup frame block, when the popup content uses one.
+ *
+ * Only the first popup-manager/popup block at the root is considered: it is the
+ * frame of the popup, everything else is content.
+ *
+ * @param string $content Raw post content of the popup.
+ * @return array Block attributes, empty when the popup has no frame block.
+ */
+function popup_manager_get_frame_attributes( string $content ): array {
+	if ( false === strpos( $content, 'popup-manager/popup' ) ) {
+		return array();
+	}
+
+	foreach ( parse_blocks( $content ) as $block ) {
+		if ( 'popup-manager/popup' === ( $block['blockName'] ?? '' ) ) {
+			return is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
+		}
+	}
+
+	return array();
+}
+
+/**
+ * Translate the Popup block attributes into the class and style attributes
+ * of the dialog element.
+ *
+ * @param array $attrs Attributes returned by popup_manager_get_frame_attributes().
+ * @return array {
+ *     @type string $class Space separated class list, always including popup-manager-dialog.
+ *     @type string $style Inline declarations, empty when nothing is customised.
+ * }
+ */
+function popup_manager_get_frame_presentation( array $attrs ): array {
+	$classes = array( 'popup-manager-dialog' );
+	$style   = '';
+
+	// Custom values (padding, radius, custom colors, shadow).
+	if ( ! empty( $attrs['style'] ) && is_array( $attrs['style'] ) ) {
+		$generated = wp_style_engine_get_styles( $attrs['style'] );
+		$style     = $generated['css'] ?? '';
+
+		// Same marker classes as wp_apply_colors_support() on a custom color.
+		if ( ! empty( $attrs['style']['color']['background'] ) ) {
+			$classes[] = 'has-background';
+		}
+		if ( ! empty( $attrs['style']['color']['text'] ) ) {
+			$classes[] = 'has-text-color';
+		}
+	}
+
+	// Preset colors.
+	if ( ! empty( $attrs['backgroundColor'] ) && is_string( $attrs['backgroundColor'] ) ) {
+		$slug = sanitize_html_class( $attrs['backgroundColor'] );
+
+		if ( $slug ) {
+			$classes[] = 'has-background';
+			$classes[] = 'has-' . $slug . '-background-color';
+		}
+	}
+
+	if ( ! empty( $attrs['textColor'] ) && is_string( $attrs['textColor'] ) ) {
+		$slug = sanitize_html_class( $attrs['textColor'] );
+
+		if ( $slug ) {
+			$classes[] = 'has-text-color';
+			$classes[] = 'has-' . $slug . '-color';
+		}
+	}
+
+	// Additional classes, including the is-style-* of the style variations.
+	if ( ! empty( $attrs['className'] ) && is_string( $attrs['className'] ) ) {
+		foreach ( preg_split( '/\s+/', $attrs['className'], -1, PREG_SPLIT_NO_EMPTY ) as $class ) {
+			$clean = sanitize_html_class( $class );
+
+			if ( $clean ) {
+				$classes[] = $clean;
+			}
+		}
+	}
+
+	return array(
+		'class' => implode( ' ', array_unique( $classes ) ),
+		'style' => $style,
+	);
+}
+
+/**
  * Generate the full HTML for a popup with Interactivity API directives.
  *
  * @param WP_Post $popup The popup post object.
@@ -123,6 +210,9 @@ function popup_manager_render_popup( WP_Post $popup ): string {
 	// Gutenberg content.
 	$content = apply_filters( 'the_content', $popup->post_content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core filter.
 
+	// Frame styling, driven by the Popup block when the content uses one.
+	$frame = popup_manager_get_frame_presentation( popup_manager_get_frame_attributes( $popup->post_content ) );
+
 	// Global custom CSS classes.
 	$custom_classes = trim( $defaults['customCssClasses'] ?? '' );
 	$wrapper_class  = 'popup-manager-wrapper' . ( $custom_classes ? ' ' . esc_attr( $custom_classes ) : '' );
@@ -165,7 +255,8 @@ function popup_manager_render_popup( WP_Post $popup ): string {
 			aria-modal="true"
 			aria-labelledby="<?php echo esc_attr( $title_id ); ?>"
 			<?php if ( $is_auto_trigger ) : ?>aria-describedby="<?php echo esc_attr( $content_id ); ?>"<?php endif; ?>
-			class="popup-manager-dialog"
+			class="<?php echo esc_attr( $frame['class'] ); ?>"
+			<?php if ( '' !== $frame['style'] ) : ?>style="<?php echo esc_attr( $frame['style'] ); ?>"<?php endif; ?>
 			data-animation="<?php echo esc_attr( $animation ); ?>"
 			data-position="<?php echo esc_attr( $position ); ?>"
 			data-size="<?php echo esc_attr( $size ); ?>"

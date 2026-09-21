@@ -45,8 +45,14 @@ function popup_manager_register_cpt(): void {
 		'has_archive'       => false,
 		'rewrite'           => false,
 		'template'          => array(
-			array( 'core/heading', array( 'level' => 2, 'placeholder' => __( 'Popup title', 'wp-popup-manager' ) ) ),
-			array( 'core/paragraph', array( 'placeholder' => __( 'Popup content…', 'wp-popup-manager' ) ) ),
+			array(
+				'popup-manager/popup',
+				array( 'lock' => array( 'remove' => true, 'move' => true ) ),
+				array(
+					array( 'core/heading', array( 'level' => 2, 'placeholder' => __( 'Popup title', 'wp-popup-manager' ) ) ),
+					array( 'core/paragraph', array( 'placeholder' => __( 'Popup content…', 'wp-popup-manager' ) ) ),
+				),
+			),
 		),
 	) );
 }

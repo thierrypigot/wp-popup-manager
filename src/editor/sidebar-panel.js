@@ -15,8 +15,11 @@ import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel } from '@wordpress/editor';
 import { useEntityProp } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { store as blockEditorStore } from '@wordpress/block-editor';
+import { createBlock, cloneBlock } from '@wordpress/blocks';
 import {
+	Button,
 	RadioControl,
 	RangeControl,
 	SelectControl,
@@ -449,6 +452,69 @@ function ConditionsPanel() {
 }
 
 /**
+ * Frame of the popup.
+ *
+ * The background, padding, radius and shadow of the dialog are carried by the
+ * Popup block. Popups created before that block existed have no frame block at
+ * the root: they keep rendering exactly as before, and this offers to wrap
+ * their content on demand.
+ */
+function FrameNotice() {
+	const { hasFrame, rootBlocks } = useSelect( ( select ) => {
+		const blocks = select( blockEditorStore ).getBlocks();
+
+		return {
+			hasFrame: blocks.some( ( block ) => block.name === 'popup-manager/popup' ),
+			rootBlocks: blocks,
+		};
+	}, [] );
+
+	const { replaceBlocks, insertBlocks } = useDispatch( blockEditorStore );
+
+	if ( hasFrame ) {
+		return (
+			<p style={ { margin: 0, fontSize: '12px', color: '#757575' } }>
+				{ __(
+					'Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar.',
+					'wp-popup-manager'
+				) }
+			</p>
+		);
+	}
+
+	const wrapInFrame = () => {
+		const frame = createBlock(
+			'popup-manager/popup',
+			{ lock: { remove: true, move: true } },
+			rootBlocks.map( ( block ) => cloneBlock( block ) )
+		);
+
+		if ( rootBlocks.length ) {
+			replaceBlocks(
+				rootBlocks.map( ( block ) => block.clientId ),
+				frame
+			);
+		} else {
+			insertBlocks( frame );
+		}
+	};
+
+	return (
+		<Notice status="info" isDismissible={ false }>
+			<p>
+				{ __(
+					'This popup has no Popup block at the root, so its frame cannot be customised.',
+					'wp-popup-manager'
+				) }
+			</p>
+			<Button variant="secondary" onClick={ wrapInFrame }>
+				{ __( 'Customize the frame', 'wp-popup-manager' ) }
+			</Button>
+		</Notice>
+	);
+}
+
+/**
  * Appearance panel.
  */
 function DisplayPanel() {
@@ -473,6 +539,8 @@ function DisplayPanel() {
 			icon="admin-appearance"
 		>
 			<VStack spacing={ 3 }>
+				<FrameNotice />
+
 				<SelectControl
 					label={ __( 'Animation', 'wp-popup-manager' ) }
 					value={ display.animation }

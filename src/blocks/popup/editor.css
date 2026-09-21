@@ -1,0 +1,47 @@
+/**
+ * Editor-only styles for the Popup block preview.
+ *
+ * The preview element carries the .popup-manager-dialog class so it inherits
+ * the exact same frame as the front end (global styles, block supports and
+ * style variations all apply). Only the front-end layout — which relies on
+ * the fixed-position wrapper — has to be replaced here.
+ *
+ * @package PopupManager
+ */
+
+.popup-manager-editor-dialog {
+	position: relative;
+	min-height: 120px;
+	box-sizing: border-box;
+	outline: 1px dashed #3858e9;
+	outline-offset: 2px;
+}
+
+/* The dashed marker is a helper, not part of the design: keep it discreet
+   and out of the way when the block is not being worked on. */
+.popup-manager-editor-dialog:not(.is-selected):not(.has-child-selected) {
+	outline-color: rgba(56, 88, 233, 0.35);
+}
+
+.popup-manager-editor-badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateY(-100%);
+	padding: 0.15rem 0.5rem;
+	background: #3858e9;
+	color: #fff;
+	border-radius: 3px 3px 0 0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	user-select: none;
+}
+
+/* Dummy close button: same box as the front one, but inert. */
+.popup-manager-editor-dialog .popup-manager-close {
+	cursor: default;
+	pointer-events: none;
+}

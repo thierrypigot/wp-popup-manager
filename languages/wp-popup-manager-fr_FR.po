@@ -614,3 +614,26 @@ msgstr "Statistiques désactivées"
 #: includes/analytics-columns.php:47
 msgid "views"
 msgstr "vues"
+
+#: includes/block-styles.php:28
+msgid "Framed"
+msgstr "Cadre"
+
+#: includes/block-styles.php:37
+msgid "Borderless"
+msgstr "Sans cadre"
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:468
+msgid "Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar."
+msgstr "Le fond, les marges intérieures, le rayon et l'ombre du cadre se règlent sur le bloc Popup lui-même, dans la barre latérale du bloc."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:495
+msgid "This popup has no Popup block at the root, so its frame cannot be customised."
+msgstr "Cette popup n'utilise pas de bloc Popup à la racine, son cadre ne peut donc pas être personnalisé."
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:501
+msgid "Customize the frame"
+msgstr "Personnaliser le cadre"
