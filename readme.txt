@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,7 +121,7 @@ Le cadre de la popup (fond, couleur du texte, marges intérieures, rayon, ombre)
 Deux variations sont disponibles dans l'onglet Styles du bloc Popup :
 
 - **Cadre** (par défaut) — fond blanc, marges de 2rem, rayon de 8px, ombre portée
-- **Sans cadre** — fond transparent, aucune marge, aucune ombre : le contenu occupe toute la popup, bord à bord. Utile pour un formulaire tiers embarqué (Brevo, Mailchimp) ou une image pleine largeur.
+- **Sans cadre** — fond transparent, aucune marge, aucune ombre : le contenu occupe toute la popup, bord à bord. Le bouton de fermeture se place **au-dessus du cadre** et ne masque donc rien du contenu. Utile pour un formulaire tiers embarqué (Brevo, Mailchimp) ou une image pleine largeur.
 
 = Propriétés personnalisées CSS =
 
@@ -132,7 +132,7 @@ Le cadre s'appuie sur des variables CSS, surchargeables depuis un thème enfant 
 - `--pm-dialog-padding` — marges intérieures (défaut : `2rem`)
 - `--pm-dialog-radius` — rayon des angles (défaut : `8px`)
 - `--pm-dialog-shadow` — ombre portée (défaut : `0 4px 24px rgba(0, 0, 0, 0.15)`)
-- `--pm-content-offset` — espace réservé en haut pour le bouton de fermeture (défaut : `2rem`)
+- `--pm-content-offset` — espace réservé en haut pour le bouton de fermeture (défaut : `3.5rem`, soit son décalage de 0.75rem plus sa hauteur de 2.75rem). Mis à `0` en « Sans cadre », où le bouton passe au-dessus du cadre, et en plein écran, où il est fixé au coin de la fenêtre
 - `--pm-fullscreen-inset` — marges du contenu en plein écran (défaut : `2rem`)
 - `--pm-fade` — hauteur du fondu de défilement en bas du contenu (défaut : `3rem` quand il reste du contenu, `0px` en bas de liste)
 
@@ -158,6 +158,11 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.1.1 =
+* Correctif : le bouton de fermeture ne recouvrait plus seulement le contenu en « Sans cadre », mais dès que la popup avait un padding inférieur à 1,5rem. Le bouton est positionné depuis le dialog et la réserve depuis le contenu : la réserve doit donc couvrir seule tout son encombrement, elle passe de 2rem à 3,5rem
+* Correctif : en « Sans cadre », le bouton de fermeture se place au-dessus du cadre pour ne rien masquer du contenu bord à bord. Le cadre cède 4rem de hauteur afin que le bouton reste dans la fenêtre quelle que soit la position. Le plein écran est inchangé, son bouton étant fixé au coin de la fenêtre
+* Correctif : `box-sizing: border-box` forcé sur le dialog et son contenu. Il n'était posé que sur le plein écran, ailleurs le plugin comptait sur le thème. Quand le thème ne le fait pas, `max-height` s'applique à la boîte de contenu et la popup dépasse la fenêtre de la valeur de son propre padding, d'où une barre de défilement sur la page
 
 = 1.1.0 =
 * Cadre de la popup pilotable depuis Gutenberg : fond, couleur du texte, marges intérieures, rayon et ombre réglables sur le bloc Popup, dans les styles globaux (Styles > Blocs > Popup) et dans le `theme.json` d'un thème

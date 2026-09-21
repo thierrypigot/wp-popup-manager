@@ -1,6 +1,6 @@
 {
 	"name": "wp-popup-manager",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"private": true,
 	"description": "Accessible WordPress popup manager — Full Gutenberg, WCAG 2.2 AA, RGESN eco-designed.",
 	"scripts": {

@@ -34,6 +34,10 @@
 /* ===== Dialog — frame (shared with the editor preview) ===== */
 
 .popup-manager-dialog {
+	/* Not inherited from the theme on purpose: without it max-height applies to
+	   the content box and the dialog ends up taller than the viewport by its own
+	   padding. */
+	box-sizing: border-box;
 	background: var(--pm-dialog-bg, #fff);
 	color: var(--pm-dialog-color, #1e1e1e);
 	border-radius: var(--pm-dialog-radius, 8px);
@@ -130,7 +134,6 @@
 	max-width: 100vw;
 	max-height: 100vh;
 	max-height: 100dvh;
-	box-sizing: border-box;
 }
 
 .popup-manager-wrapper .popup-manager-dialog[data-position="fullscreen"] .popup-manager-content {
@@ -160,6 +163,26 @@
 	max-width: 800px;
 }
 
+/* "Borderless": the content runs edge to edge, so the close button moves just
+   above the frame instead of hiding the top of it. The frame gives up 4rem of
+   height so the button always stays inside the viewport, whatever the position.
+   Fullscreen is left alone: its button is already fixed to the viewport corner. */
+.popup-manager-wrapper .popup-manager-dialog.is-style-borderless:not([data-position="fullscreen"]) {
+	overflow: visible;
+	max-height: calc(90vh - 4rem);
+	max-height: calc(90dvh - 4rem);
+}
+
+.popup-manager-wrapper .popup-manager-dialog.is-style-borderless[data-position^="top"] {
+	top: 4rem;
+}
+
+.popup-manager-dialog.is-style-borderless:not([data-position="fullscreen"]) .popup-manager-close {
+	top: auto;
+	bottom: calc(100% + 0.5rem);
+	right: 0;
+}
+
 /* ===== Close button ===== */
 
 /* Keeps its own background and color whatever the dialog frame looks like,
@@ -184,9 +207,14 @@
 	backdrop-filter: blur(4px);
 }
 
-/* Reserve top space for the close button */
+/* Reserve top space for the close button.
+   3.5rem = its 0.75rem offset + its 2.75rem height. The button is positioned
+   from the dialog, the reserve from the content, so the reserve has to cover
+   the whole footprint on its own: any smaller value lets the button sit on the
+   content as soon as the dialog padding drops below 1.5rem. */
 .popup-manager-content {
-	padding-top: var(--pm-content-offset, 2rem);
+	box-sizing: border-box;
+	padding-top: var(--pm-content-offset, 3.5rem);
 	flex: 1 1 auto;
 	min-height: 0; /* without it a flex child never scrolls */
 	overflow-y: auto;
