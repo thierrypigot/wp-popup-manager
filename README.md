@@ -66,7 +66,7 @@ WP Popup Manager is a WordPress popup plugin built from the ground up for the mo
 
 1. Create a new Popup (**Popups > Add New**)
 2. Add content using Gutenberg blocks
-3. Configure the trigger in the sidebar (click, page load, scroll, exit intent, inactivity)
+3. Configure the trigger in the sidebar (click, page load, scroll, section reached, exit intent, inactivity)
 4. Set display conditions (pages, post types, date range, time of day, user role, device, referrer)
 5. Choose appearance settings (animation, position grid, size, overlay with color picker)
 6. Set frequency (every visit, once per session, once per day, once ever)
@@ -81,7 +81,8 @@ For click-triggered popups, insert a **Popup Trigger** block in any page or post
 
 - **Click** — trigger button block
 - **Page load** — configurable delay
-- **Scroll depth** — configurable threshold %
+- **Scroll depth** — configurable threshold %, opening delay in milliseconds
+- **Section reached** — HTML anchor of a block, opening delay in milliseconds. The popup is only loaded on pages where the anchor is rendered
 - **Exit intent** — mouse leaves window
 - **Inactivity** — configurable delay
 

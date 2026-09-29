@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Popup Manager 1.0.3\n"
+"Project-Id-Version: WP Popup Manager 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-popup-manager\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-29T16:34:08+00:00\n"
+"POT-Creation-Date: 2026-09-29T14:38:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: wp-popup-manager\n"
@@ -47,9 +47,15 @@ msgstr ""
 msgid "views"
 msgstr ""
 
-#: includes/enqueue.php:182
-#: build/blocks/popup/index.js:1
-#: src/blocks/popup/edit.js:26
+#: includes/block-styles.php:27
+msgid "Framed"
+msgstr ""
+
+#: includes/block-styles.php:36
+msgid "Borderless"
+msgstr ""
+
+#: includes/enqueue.php:419
 msgid "Close"
 msgstr ""
 
@@ -111,20 +117,16 @@ msgstr ""
 msgid "Popup updated."
 msgstr ""
 
-#: includes/register-cpt.php:48
-#: build/blocks/popup/index.js:1
-#: src/blocks/popup/edit.js:45
+#: includes/register-cpt.php:52
 msgid "Popup title"
 msgstr ""
 
-#: includes/register-cpt.php:49
-#: build/blocks/popup/index.js:1
-#: src/blocks/popup/edit.js:46
+#: includes/register-cpt.php:53
 msgid "Popup content…"
 msgstr ""
 
-#: wp-popup-manager.php:92
 #: wp-popup-manager.php:93
+#: wp-popup-manager.php:94
 msgid "Popup Manager"
 msgstr ""
 
@@ -159,7 +161,7 @@ msgid "Select a popup in the block settings."
 msgstr ""
 
 #: build/blocks/popup/index.js:1
-#: src/blocks/popup/edit.js:20
+#: src/blocks/popup/edit.js:38
 msgid "Popup"
 msgstr ""
 
@@ -181,28 +183,28 @@ msgstr ""
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:108
-#: src/editor/sidebar-panel.js:480
+#: src/editor/sidebar-panel.js:581
 msgid "Fade"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:109
-#: src/editor/sidebar-panel.js:481
+#: src/editor/sidebar-panel.js:582
 msgid "Slide up"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:110
-#: src/editor/sidebar-panel.js:482
+#: src/editor/sidebar-panel.js:583
 msgid "Scale"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:111
-#: src/editor/sidebar-panel.js:483
+#: src/editor/sidebar-panel.js:584
 msgid "None"
 msgstr ""
 
@@ -259,7 +261,7 @@ msgstr ""
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:129
-#: src/editor/sidebar-panel.js:537
+#: src/editor/sidebar-panel.js:638
 msgid "Fullscreen"
 msgstr ""
 
@@ -271,28 +273,28 @@ msgstr ""
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:138
-#: src/editor/sidebar-panel.js:617
+#: src/editor/sidebar-panel.js:718
 msgid "Every visit"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:139
-#: src/editor/sidebar-panel.js:618
+#: src/editor/sidebar-panel.js:719
 msgid "Once per session"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:140
-#: src/editor/sidebar-panel.js:619
+#: src/editor/sidebar-panel.js:720
 msgid "Once per day"
 msgstr ""
 
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:141
-#: src/editor/sidebar-panel.js:620
+#: src/editor/sidebar-panel.js:721
 msgid "Once ever"
 msgstr ""
 
@@ -332,262 +334,307 @@ msgid "Loading settings…"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:80
+#: src/editor/sidebar-panel.js:88
 msgid "Trigger"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:85
+#: src/editor/sidebar-panel.js:93
 msgid "Trigger type"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:88
+#: src/editor/sidebar-panel.js:96
 msgid "Click (trigger button)"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:89
+#: src/editor/sidebar-panel.js:97
 msgid "Page load"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:90
+#: src/editor/sidebar-panel.js:98
 msgid "Scroll depth"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:91
+#: src/editor/sidebar-panel.js:99
+msgid "Section reached"
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:100
 msgid "Exit intent (mouse)"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:92
+#: src/editor/sidebar-panel.js:101
 msgid "Inactivity"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:99
+#: src/editor/sidebar-panel.js:108
 msgid "Delay (seconds)"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:110
+#: src/editor/sidebar-panel.js:119
 msgid "Scroll threshold (%)"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:116
+#: src/editor/sidebar-panel.js:125
 msgid "Popup opens when the user scrolls past this percentage of the page."
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:122
-msgid "Inactivity delay (seconds)"
-msgstr ""
-
-#: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:128
-msgid "Popup opens after this many seconds without user interaction."
+#: src/editor/sidebar-panel.js:131
+msgid "Section anchor"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
 #: src/editor/sidebar-panel.js:134
+msgid "HTML anchor of the section, without the #. Set it in the \"HTML anchor\" field of the block (Advanced panel). The popup is only loaded on pages that contain this anchor."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:140
+msgid "Without an anchor, this popup is never displayed."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:146
+msgid "Opening delay (milliseconds)"
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:152
+msgid "Wait time between the trigger and the opening of the popup."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:158
+msgid "Inactivity delay (seconds)"
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:164
+msgid "Popup opens after this many seconds without user interaction."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:170
 msgid "This popup opens without user action. This may disrupt navigation for people using assistive technologies. Consider using a click trigger if possible."
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:183
-#: src/editor/sidebar-panel.js:385
+#: src/editor/sidebar-panel.js:219
+#: src/editor/sidebar-panel.js:421
 msgid "Operator"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:186
-#: src/editor/sidebar-panel.js:388
+#: src/editor/sidebar-panel.js:222
+#: src/editor/sidebar-panel.js:424
 msgid "Include"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:187
-#: src/editor/sidebar-panel.js:389
+#: src/editor/sidebar-panel.js:223
+#: src/editor/sidebar-panel.js:425
 msgid "Exclude"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:192
+#: src/editor/sidebar-panel.js:228
 msgid "Pages"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:242
+#: src/editor/sidebar-panel.js:278
 msgid "Display Conditions"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:248
+#: src/editor/sidebar-panel.js:284
 msgid "Specific pages"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:269
-#: src/editor/sidebar-panel.js:281
+#: src/editor/sidebar-panel.js:305
+#: src/editor/sidebar-panel.js:317
 msgid "Content types"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:290
+#: src/editor/sidebar-panel.js:326
 msgid "Date range"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:303
+#: src/editor/sidebar-panel.js:339
 msgid "Start date"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:311
+#: src/editor/sidebar-panel.js:347
 msgid "End date"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:319
+#: src/editor/sidebar-panel.js:355
 msgid "Start time"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:327
+#: src/editor/sidebar-panel.js:363
 msgid "End time"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:338
+#: src/editor/sidebar-panel.js:374
 msgid "Time of day"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:351
+#: src/editor/sidebar-panel.js:387
 msgid "From"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:359
+#: src/editor/sidebar-panel.js:395
 msgid "To"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:365
+#: src/editor/sidebar-panel.js:401
 msgid "Supports overnight ranges (e.g. 22:00 to 06:00)."
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:372
+#: src/editor/sidebar-panel.js:408
 msgid "User role"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:394
+#: src/editor/sidebar-panel.js:430
 msgid "User roles"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:404
+#: src/editor/sidebar-panel.js:440
 msgid "Device type"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:416
+#: src/editor/sidebar-panel.js:452
 msgid "Devices"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:426
+#: src/editor/sidebar-panel.js:462
 msgid "Referrer URL"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:438
+#: src/editor/sidebar-panel.js:474
 msgid "URL pattern"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:443
+#: src/editor/sidebar-panel.js:479
 msgid "Example: google.com, facebook.com"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:472
+#: src/editor/sidebar-panel.js:510
+msgid "Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:538
+msgid "This popup has no Popup block at the root, so its frame cannot be customised."
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:544
+msgid "Customize the frame"
+msgstr ""
+
+#: build/editor/sidebar-panel.js:1
+#: src/editor/sidebar-panel.js:571
 msgid "Appearance"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:477
+#: src/editor/sidebar-panel.js:578
 msgid "Animation"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:490
-#: src/editor/sidebar-panel.js:499
+#: src/editor/sidebar-panel.js:591
+#: src/editor/sidebar-panel.js:600
 msgid "Position"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:547
+#: src/editor/sidebar-panel.js:648
 msgid "Size"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:552
+#: src/editor/sidebar-panel.js:653
 msgid "Small"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:553
+#: src/editor/sidebar-panel.js:654
 msgid "Medium"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:554
+#: src/editor/sidebar-panel.js:655
 msgid "Large"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:558
+#: src/editor/sidebar-panel.js:659
 msgid "Show overlay"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:567
+#: src/editor/sidebar-panel.js:668
 msgid "Overlay color"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:576
+#: src/editor/sidebar-panel.js:677
 msgid "Close on overlay click"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:584
+#: src/editor/sidebar-panel.js:685
 msgid "Close with Escape key"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:609
+#: src/editor/sidebar-panel.js:710
 msgid "Frequency & Analytics"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:614
+#: src/editor/sidebar-panel.js:715
 msgid "Show popup"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:626
+#: src/editor/sidebar-panel.js:727
 msgid "Enable analytics"
 msgstr ""
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:629
+#: src/editor/sidebar-panel.js:730
 msgid "Tracks impressions and closes. Adds 1 HTTP request per page view containing this popup."
 msgstr ""
 
@@ -613,27 +660,4 @@ msgstr ""
 #: src/blocks/popup/block.json
 msgctxt "block description"
 msgid "Accessible popup with Interactivity API support."
-msgstr ""
-
-#: includes/block-styles.php:28
-msgid "Framed"
-msgstr ""
-
-#: includes/block-styles.php:37
-msgid "Borderless"
-msgstr ""
-
-#: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:468
-msgid "Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar."
-msgstr ""
-
-#: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:495
-msgid "This popup has no Popup block at the root, so its frame cannot be customised."
-msgstr ""
-
-#: build/editor/sidebar-panel.js:1
-#: src/editor/sidebar-panel.js:501
-msgid "Customize the frame"
 msgstr ""

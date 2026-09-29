@@ -72,7 +72,7 @@ function popup_manager_register_meta(): void {
 					'properties' => array(
 						'type'  => array(
 							'type' => 'string',
-							'enum' => array( 'click', 'on_load', 'exit_intent', 'scroll', 'inactivity' ),
+							'enum' => array( 'click', 'on_load', 'exit_intent', 'scroll', 'section', 'inactivity' ),
 						),
 						'delay' => array(
 							'type'    => 'integer',
@@ -81,6 +81,14 @@ function popup_manager_register_meta(): void {
 						'threshold' => array(
 							'type'    => 'integer',
 							'default' => 50,
+						),
+						'anchor' => array(
+							'type'    => 'string',
+							'default' => '',
+						),
+						'openDelay' => array(
+							'type'    => 'integer',
+							'default' => 0,
 						),
 					),
 				),
@@ -248,7 +256,7 @@ function popup_manager_sanitize_triggers( $value ): array {
 		return array( array( 'type' => 'click' ) );
 	}
 
-	$allowed_types = array( 'click', 'on_load', 'exit_intent', 'scroll', 'inactivity' );
+	$allowed_types = array( 'click', 'on_load', 'exit_intent', 'scroll', 'section', 'inactivity' );
 
 	return array_values( array_filter( array_map( function ( $item ) use ( $allowed_types ) {
 		if ( ! is_array( $item ) || empty( $item['type'] ) || ! in_array( $item['type'], $allowed_types, true ) ) {
@@ -263,9 +271,32 @@ function popup_manager_sanitize_triggers( $value ): array {
 		if ( isset( $item['threshold'] ) ) {
 			$clean['threshold'] = min( 100, max( 0, absint( $item['threshold'] ) ) );
 		}
+		if ( isset( $item['anchor'] ) ) {
+			$clean['anchor'] = popup_manager_sanitize_anchor( $item['anchor'] );
+		}
+		if ( isset( $item['openDelay'] ) ) {
+			$clean['openDelay'] = min( 10000, absint( $item['openDelay'] ) );
+		}
 
 		return $clean;
 	}, $value ) ) );
+}
+
+/**
+ * Sanitize an HTML anchor: no leading #, only the characters Gutenberg allows
+ * in the "HTML anchor" field.
+ *
+ * @param mixed $value Raw anchor.
+ * @return string
+ */
+function popup_manager_sanitize_anchor( $value ): string {
+	if ( ! is_string( $value ) ) {
+		return '';
+	}
+
+	$anchor = preg_replace( '/[^A-Za-z0-9_:.\-]/', '', ltrim( trim( $value ), '#' ) );
+
+	return substr( (string) $anchor, 0, 200 );
 }
 
 function popup_manager_sanitize_conditions( $value ): array {

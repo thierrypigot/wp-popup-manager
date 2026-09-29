@@ -66,6 +66,11 @@ function TriggerPanel() {
 		}
 		if ( type === 'scroll' ) {
 			newTrigger.threshold = 50;
+			newTrigger.openDelay = 0;
+		}
+		if ( type === 'section' ) {
+			newTrigger.anchor = '';
+			newTrigger.openDelay = 0;
 		}
 		if ( type === 'inactivity' ) {
 			newTrigger.delay = 30;
@@ -91,6 +96,7 @@ function TriggerPanel() {
 						{ value: 'click', label: __( 'Click (trigger button)', 'wp-popup-manager' ) },
 						{ value: 'on_load', label: __( 'Page load', 'wp-popup-manager' ) },
 						{ value: 'scroll', label: __( 'Scroll depth', 'wp-popup-manager' ) },
+						{ value: 'section', label: __( 'Section reached', 'wp-popup-manager' ) },
 						{ value: 'exit_intent', label: __( 'Exit intent (mouse)', 'wp-popup-manager' ) },
 						{ value: 'inactivity', label: __( 'Inactivity', 'wp-popup-manager' ) },
 					] }
@@ -117,6 +123,33 @@ function TriggerPanel() {
 						max={ 100 }
 						step={ 5 }
 						help={ __( 'Popup opens when the user scrolls past this percentage of the page.', 'wp-popup-manager' ) }
+					/>
+				) }
+
+				{ triggerType === 'section' && (
+					<TextControl
+						label={ __( 'Section anchor', 'wp-popup-manager' ) }
+						value={ currentTrigger.anchor ?? '' }
+						onChange={ ( v ) => updateParam( 'anchor', v.replace( /^#/, '' ).replace( /[^A-Za-z0-9_:.-]/g, '' ) ) }
+						help={ __( 'HTML anchor of the section, without the #. Set it in the "HTML anchor" field of the block (Advanced panel). The popup is only loaded on pages that contain this anchor.', 'wp-popup-manager' ) }
+					/>
+				) }
+
+				{ triggerType === 'section' && ! currentTrigger.anchor && (
+					<Notice status="warning" isDismissible={ false }>
+						{ __( 'Without an anchor, this popup is never displayed.', 'wp-popup-manager' ) }
+					</Notice>
+				) }
+
+				{ ( triggerType === 'scroll' || triggerType === 'section' ) && (
+					<RangeControl
+						label={ __( 'Opening delay (milliseconds)', 'wp-popup-manager' ) }
+						value={ currentTrigger.openDelay ?? 0 }
+						onChange={ ( v ) => updateParam( 'openDelay', v ?? 0 ) }
+						min={ 0 }
+						max={ 10000 }
+						step={ 100 }
+						help={ __( 'Wait time between the trigger and the opening of the popup.', 'wp-popup-manager' ) }
 					/>
 				) }
 

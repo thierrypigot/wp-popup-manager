@@ -410,11 +410,54 @@ const { state, actions } = store(
 						}
 						const percent = ( scrollTop / docHeight ) * 100;
 						if ( percent >= threshold ) {
-							triggerBtn.click();
 							window.removeEventListener( 'scroll', handler );
+							setTimeout( () => triggerBtn.click(), ctx.openDelay || 0 );
 						}
 					};
 					window.addEventListener( 'scroll', handler, { passive: true } );
+				}
+
+				// section trigger: open when the anchored element enters the
+				// viewport. The server only emits the popup when the anchor is
+				// rendered, the lookup is a safety net.
+				const section = ctx.triggerType === 'section' && ctx.anchor
+					? document.getElementById( ctx.anchor )
+					: null;
+
+				if ( section && triggerBtn && 'IntersectionObserver' in window ) {
+					let isVisible = false;
+					let hasScrolled = false;
+
+					const open = () => {
+						observer.disconnect();
+						window.removeEventListener( 'scroll', onScroll );
+						setTimeout( () => triggerBtn.click(), ctx.openDelay || 0 );
+					};
+
+					// A section already visible on load (short page, #anchor
+					// link) waits for the first scroll, otherwise the popup
+					// would open on load.
+					const onScroll = () => {
+						hasScrolled = true;
+						if ( isVisible ) {
+							open();
+						}
+					};
+
+					// Reached when the top of the section passes 70% of the
+					// viewport height, whatever the section height.
+					const observer = new IntersectionObserver(
+						( entries ) => {
+							isVisible = entries.some( ( entry ) => entry.isIntersecting );
+							if ( isVisible && hasScrolled ) {
+								open();
+							}
+						},
+						{ rootMargin: '0px 0px -30% 0px' }
+					);
+
+					observer.observe( section );
+					window.addEventListener( 'scroll', onScroll, { passive: true } );
 				}
 
 				// exit_intent trigger: detect mouse leaving the window.

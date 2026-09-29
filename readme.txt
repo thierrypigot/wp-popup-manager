@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,7 +56,7 @@ WP Popup Manager est une extension WordPress de gestion de popups conçue de A �
 
 1. Créez une nouvelle popup (Popups > Ajouter)
 2. Ajoutez du contenu avec des blocs Gutenberg
-3. Configurez le déclencheur dans la barre latérale (clic, chargement de page, défilement, exit intent, inactivité)
+3. Configurez le déclencheur dans la barre latérale (clic, chargement de page, défilement, section atteinte, exit intent, inactivité)
 4. Définissez les conditions d'affichage (pages, types de contenu, plage de dates, heure, rôle utilisateur, appareil, référent)
 5. Choisissez l'apparence (animation, grille de position, taille, overlay avec pipette de couleur)
 6. Définissez la fréquence (à chaque visite, une fois par session, une fois par jour, une seule fois)
@@ -70,7 +70,8 @@ Pour les popups déclenchées au clic, insérez un bloc **Popup Trigger** dans n
 = Déclencheurs (exclusifs) =
 - Clic (bloc bouton déclencheur)
 - Chargement de page (délai configurable)
-- Profondeur de défilement (seuil en % configurable)
+- Profondeur de défilement (seuil en % configurable, délai d'ouverture en millisecondes)
+- Section atteinte (ancre HTML d'un bloc, délai d'ouverture en millisecondes). La popup n'est chargée que sur les pages où l'ancre est rendue
 - Exit intent (souris quitte la fenêtre)
 - Inactivité (délai configurable)
 
@@ -158,6 +159,11 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.2.0 =
+* Nouveau déclencheur « Section atteinte » : la popup s'ouvre quand la section portant l'ancre HTML choisie arrive à 70 % de la hauteur de l'écran. Si la section est déjà visible au chargement (page courte, lien vers l'ancre), la popup attend le premier défilement
+* La popup n'est chargée que sur les pages où l'ancre est réellement rendue : sans l'ancre, aucun HTML, script ni style n'est ajouté. Une ancre présente uniquement dans le contenu d'une popup n'est pas prise en compte
+* Délai d'ouverture en millisecondes (0 à 10 000) pour les déclencheurs « Section atteinte » et « Profondeur de défilement »
 
 = 1.1.1 =
 * Correctif : le bouton de fermeture ne recouvrait plus seulement le contenu en « Sans cadre », mais dès que la popup avait un padding inférieur à 1,5rem. Le bouton est positionné depuis le dialog et la réserve depuis le contenu : la réserve doit donc couvrir seule tout son encombrement, elle passe de 2rem à 3,5rem
