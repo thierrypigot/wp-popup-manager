@@ -46,8 +46,21 @@ jobs:
           cd build-dist
           zip -r ../wp-popup-manager.zip wp-popup-manager
 
+      - name: Extract release notes from readme.txt
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v v="$VERSION" '
+            $0 == "= " v " =" { found = 1; next }
+            found && /^=/ { exit }
+            found { sub(/^\* /, "- "); print }
+          ' readme.txt | tr -d '\r' | sed -e '/./,$!d' > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::warning::No changelog entry \"= $VERSION =\" in readme.txt, release notes will only contain the generated part."
+          fi
+
       - name: Attach zip to release
         uses: softprops/action-gh-release@v2
         with:
           files: wp-popup-manager.zip
+          body_path: release-notes.md
           generate_release_notes: true
