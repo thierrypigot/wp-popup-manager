@@ -381,12 +381,19 @@ function popup_manager_sanitize_display( $value ): array {
 	return $clean;
 }
 
+/**
+ * Valide une couleur : hexadécimale (#rgb, #rgba, #rrggbb, #rrggbbaa), rgb(a)
+ * ou hsl(a). Le sélecteur de couleur de l'éditeur, transparence activée,
+ * renvoie la forme #rrggbbaa : sanitize_hex_color() ne la connaît pas.
+ *
+ * @param string $value Couleur saisie.
+ * @return string Couleur valide, sinon le voile par défaut.
+ */
 function popup_manager_sanitize_color( string $value ): string {
 	$value = trim( $value );
 
-	$hex = sanitize_hex_color( $value );
-	if ( $hex ) {
-		return $hex;
+	if ( preg_match( '/^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $value ) ) {
+		return strtolower( $value );
 	}
 
 	if ( preg_match( '/^rgba?\(\s*[\d.,\s%]+\)$|^hsla?\(\s*[\d.,\s%]+\)$/', $value ) ) {

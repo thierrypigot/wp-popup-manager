@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,9 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.2.1 =
+* Correction : la couleur du voile choisie avec transparence (sélecteur de couleur, format #rrggbbaa) n'était pas enregistrée et revenait à la couleur par défaut. Les formes hexadécimales #rgb, #rgba, #rrggbb et #rrggbbaa sont désormais acceptées
 
 = 1.2.0 =
 * Nouveau déclencheur « Section atteinte » : la popup s'ouvre quand la section portant l'ancre HTML choisie arrive à 70 % de la hauteur de l'écran. Si la section est déjà visible au chargement (page courte, lien vers l'ancre), la popup attend le premier défilement
