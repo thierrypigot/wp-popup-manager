@@ -2,9 +2,9 @@
 Contributors: wearewp
 Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,10 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.4.1 =
+* Ajout de l'en-tête « Update URI » : WordPress n'interroge plus WordPress.org pour cette extension, et une extension homonyme publiée là-bas ne pourra jamais être proposée en mise à jour à sa place. Les mises à jour continuent d'arriver depuis GitHub
+* Testé jusqu'à WordPress 7.1
 
 = 1.4.0 =
 * Nouvelle interface des réglages : la barre latérale n'affiche plus qu'un résumé (miniature de l'apparence, déclencheur, conditions, options), dont chaque ligne ouvre l'onglet correspondant. Les réglages se modifient dans une fenêtre à quatre onglets : Déclencheur, Conditions, Apparence, Fréquence et statistiques
