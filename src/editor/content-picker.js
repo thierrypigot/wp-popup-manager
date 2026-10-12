@@ -174,6 +174,10 @@ function ContentPickerModal( { ids, operator, onChange, onClose } ) {
 
 	const { items, loading: loadingSelection, addItems } = useItemsById( ids, types );
 
+	// With Polylang, only the contents in the language of the popup are searched:
+	// on the site, a content also covers its translations.
+	const language = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostAttribute( 'popup_manager_lang' ) || '', [] );
+
 	const typeNames = useMemo( () => {
 		const names = {};
 		types.forEach( ( type ) => {
@@ -197,6 +201,7 @@ function ContentPickerModal( { ids, operator, onChange, onClose } ) {
 			path: addQueryArgs( `/${ currentType.rest_namespace || 'wp/v2' }/${ currentType.rest_base }`, {
 				search: search || undefined,
 				orderby: search ? 'relevance' : 'date',
+				popup_manager_lang: language || undefined,
 				per_page: PER_PAGE,
 				status: STATUSES,
 				context: 'edit',
@@ -215,7 +220,7 @@ function ContentPickerModal( { ids, operator, onChange, onClose } ) {
 			cancelled = true;
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ currentType?.slug, search ] );
+	}, [ currentType?.slug, search, language ] );
 
 	// Titles of the parent pages, to tell apart subpages of the same name.
 	const parentIds = useMemo( () => {
@@ -284,6 +289,16 @@ function ContentPickerModal( { ids, operator, onChange, onClose } ) {
 							{ sprintf( /* translators: %d: number of selected contents. */ __( 'Selection (%d)', 'wp-popup-manager' ), ids.length ) }
 						</Button>
 					</div>
+
+					{ ! showSelection && language && (
+						<p className="popup-manager-picker__language">
+							{ sprintf(
+								/* translators: %s: language code, e.g. FR. */
+								__( 'Only the contents in %s, the language of this popup, are listed. Their translations are covered too.', 'wp-popup-manager' ),
+								language.toUpperCase()
+							) }
+						</p>
+					) }
 
 					{ ! showSelection && (
 						<SearchControl

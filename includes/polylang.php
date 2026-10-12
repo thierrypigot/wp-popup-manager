@@ -12,7 +12,8 @@
  *   Without a published translation, the original popup is loaded anyway, so
  *   that the button never does nothing.
  * - Creating a translation copies the popup settings, never the statistics.
- * - The "Specific contents" picker shows the language of each content.
+ * - The "Specific contents" picker shows the language of each content, and
+ *   only searches the contents in the language of the popup.
  *
  * Every function is a no-op without Polylang.
  *
@@ -235,6 +236,8 @@ function popup_manager_pll_rest_language(): void {
 			continue;
 		}
 
+		add_filter( "rest_{$post_type}_query", 'popup_manager_pll_rest_filter_language', 10, 2 );
+
 		register_rest_field( $post_type, 'popup_manager_lang', array(
 			'get_callback' => function ( $item ) {
 				return (string) pll_get_post_language( (int) $item['id'] );
@@ -246,4 +249,23 @@ function popup_manager_pll_rest_language(): void {
 			),
 		) );
 	}
+}
+
+/**
+ * Restrict a REST query to one language when the picker asks for it
+ * (popup_manager_lang parameter). Polylang (free) ignores the lang parameter
+ * in REST requests, but handles the lang query var of WP_Query.
+ *
+ * @param array           $args    WP_Query arguments.
+ * @param WP_REST_Request $request REST request.
+ * @return array
+ */
+function popup_manager_pll_rest_filter_language( $args, $request ) {
+	$language = sanitize_key( (string) $request->get_param( 'popup_manager_lang' ) );
+
+	if ( '' !== $language && function_exists( 'pll_languages_list' ) && in_array( $language, pll_languages_list(), true ) ) {
+		$args['lang'] = $language;
+	}
+
+	return $args;
 }

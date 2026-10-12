@@ -163,6 +163,7 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 = 1.3.1 =
 * La condition « Pages spécifiques » devient « Contenus spécifiques » : elle accepte les articles et tous les types de contenu publics, plus seulement les pages. Les popups existantes continuent de fonctionner sans changement
 * Le choix des contenus se fait dans une fenêtre dédiée : filtre par type de contenu, recherche sur le serveur (adaptée aux sites qui ont beaucoup de contenus), et pour chaque résultat le type, la date ou l'état, la page parente et la langue, pour départager les contenus de même titre. La barre latérale n'affiche plus qu'un résumé
+* Avec Polylang, la fenêtre ne propose que les contenus dans la langue de la popup : sur le site, un contenu choisi couvre aussi ses traductions
 * Dans la liste des popups, la pastille indique le nombre de contenus, et leur répartition par type au survol
 
 = 1.3.0 =
