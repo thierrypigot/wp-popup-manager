@@ -162,6 +162,23 @@ export function dateRangeState( condition, postDate ) {
 	return '';
 }
 
+/**
+ * Whether the popup is restricted to chosen contents ("Only on these contents").
+ * Content types and taxonomy conditions are then redundant: they can only
+ * remove some of the chosen contents.
+ *
+ * @param {Object[]} conditions Conditions meta.
+ * @return {boolean} True when restricted.
+ */
+export function isLimitedToContents( conditions ) {
+	return ( conditions || [] ).some( ( c ) => 'page' === c.type && 'include' === ( c.operator || 'include' ) && ( c.ids || [] ).length );
+}
+
+/**
+ * Condition types made redundant by "Only on these contents".
+ */
+export const REDUNDANT_WITH_CONTENTS = [ 'post_type', 'taxonomy' ];
+
 const formatDay = ( day ) => ( day ? dateI18n( getSettings().formats.date, `${ day }T12:00:00` ) : '' );
 
 /**
@@ -324,11 +341,24 @@ export function useSummaryContext() {
  * @return {Object[]} List of {type, title, label, warning}.
  */
 export function describeConditions( conditions, context ) {
+	const limited = isLimitedToContents( conditions );
+
 	// Display order of the types, same as the cards of the Conditions tab.
 	const list = conditionTypes()
 		.map( ( type ) => {
 			const condition = ( conditions || [] ).find( ( item ) => item.type === type.type );
-			return condition ? { type: type.type, title: type.label, ...type.describe( condition, context ) } : null;
+			if ( ! condition ) {
+				return null;
+			}
+
+			const summary = { type: type.type, title: type.label, ...type.describe( condition, context ) };
+
+			if ( limited && REDUNDANT_WITH_CONTENTS.includes( type.type ) ) {
+				summary.label = sprintf( /* translators: %s: condition summary. */ __( '%s (redundant with the chosen contents)', 'wp-popup-manager' ), summary.label );
+				summary.warning = true;
+			}
+
+			return summary;
 		} )
 		.filter( Boolean );
 

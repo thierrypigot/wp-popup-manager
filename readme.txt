@@ -163,6 +163,7 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 = 1.4.0 =
 * Nouvelle interface des réglages : la barre latérale n'affiche plus qu'un résumé (miniature de l'apparence, déclencheur, conditions, options), dont chaque ligne ouvre l'onglet correspondant. Les réglages se modifient dans une fenêtre à quatre onglets : Déclencheur, Conditions, Apparence, Fréquence et statistiques
 * Conditions d'affichage : seules les conditions actives sont affichées, sous forme de cartes avec leur résumé, et le bouton « Ajouter une condition » propose les autres. Les réglages qui empêchent l'affichage sont signalés en rouge
+* En mode « Uniquement sur ces contenus », les conditions « Types de contenu » et « Taxonomie » ne peuvent que retirer des contenus choisis : elles sont grisées dans « Ajouter une condition », et signalées en rouge si elles coexistent déjà. En mode « Partout sauf sur ces contenus », la combinaison reste possible (par exemple : tous les articles sauf quelques-uns)
 * Apparence : aperçu en direct de la position, de la taille et du voile
 * Types de contenu et appareils se choisissent par cases à cocher, avec les noms des types de contenu du site
 * La condition « Pages spécifiques » devient « Contenus spécifiques » : elle accepte les articles et tous les types de contenu publics, plus seulement les pages. Les popups existantes continuent de fonctionner sans changement

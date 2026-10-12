@@ -87,7 +87,7 @@ msgstr "Contenu de la popup…"
 
 #: includes/enqueue.php:419
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:358
+#: src/editor/settings/conditions-tab.js:361
 msgid "Close"
 msgstr "Fermer"
 
@@ -161,7 +161,7 @@ msgstr "Valeurs par défaut"
 msgid "Default animation"
 msgstr "Animation par défaut"
 
-#: includes/admin-summary.php:414
+#: includes/admin-summary.php:436
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:108
@@ -169,7 +169,7 @@ msgstr "Animation par défaut"
 msgid "Fade"
 msgstr "Fondu"
 
-#: includes/admin-summary.php:415
+#: includes/admin-summary.php:437
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:109
@@ -177,7 +177,7 @@ msgstr "Fondu"
 msgid "Slide up"
 msgstr "Glisser vers le haut"
 
-#: includes/admin-summary.php:416
+#: includes/admin-summary.php:438
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:110
@@ -185,7 +185,7 @@ msgstr "Glisser vers le haut"
 msgid "Scale"
 msgstr "Zoom"
 
-#: includes/admin-summary.php:417
+#: includes/admin-summary.php:439
 #: build/editor/settings-page.js:1
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings-page.js:111
@@ -325,7 +325,7 @@ msgstr "Chargement des réglages…"
 #: includes/admin-summary.php:70
 #: build/editor/sidebar-panel.js:3
 #: src/editor/sidebar-panel.js:118
-#: src/editor/sidebar-panel.js:195
+#: src/editor/sidebar-panel.js:223
 msgid "Trigger"
 msgstr "Déclencheur"
 
@@ -409,12 +409,12 @@ msgid "Exclude"
 msgstr "Exclure"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:195
+#: src/editor/settings/shared.js:212
 msgid "Content types"
 msgstr "Types de contenu"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:221
+#: src/editor/settings/shared.js:238
 msgid "Date range"
 msgstr "Plage de dates"
 
@@ -439,7 +439,7 @@ msgid "End time"
 msgstr "Heure de fin"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:250
+#: src/editor/settings/shared.js:267
 msgid "Time of day"
 msgstr "Heure de la journée"
 
@@ -459,7 +459,7 @@ msgid "Supports overnight ranges (e.g. 22:00 to 06:00)."
 msgstr "Prend en charge les plages nocturnes (ex. 22:00 à 06:00)."
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:258
+#: src/editor/settings/shared.js:275
 msgid "User role"
 msgstr "Rôle utilisateur"
 
@@ -469,12 +469,12 @@ msgid "User roles"
 msgstr "Rôles utilisateurs"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:274
+#: src/editor/settings/shared.js:291
 msgid "Device type"
 msgstr "Type d'appareil"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:282
+#: src/editor/settings/shared.js:299
 msgid "Referrer URL"
 msgstr "URL de référence"
 
@@ -740,19 +740,19 @@ msgstr "Clic sur le voile désactivé"
 
 #: includes/admin-summary.php:71
 #: build/editor/sidebar-panel.js:3
-#: src/editor/sidebar-panel.js:196
+#: src/editor/sidebar-panel.js:224
 msgid "Display"
 msgstr "Affichage"
 
 #: includes/admin-summary.php:72
 #: build/editor/sidebar-panel.js:3
-#: src/editor/sidebar-panel.js:198
+#: src/editor/sidebar-panel.js:226
 msgid "Options"
 msgstr "Options"
 
 #: includes/admin-summary.php:95
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:347
+#: src/editor/settings/conditions-tab.js:350
 msgid "Warning:"
 msgstr "Attention :"
 
@@ -803,202 +803,202 @@ msgid "Click on a trigger button"
 msgstr "Clic sur un bouton déclencheur"
 
 #. translators: 1: start time, 2: end time.
-#: includes/admin-summary.php:283
+#: includes/admin-summary.php:287
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:253
+#: src/editor/settings/shared.js:270
 msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
-#: includes/admin-summary.php:295
+#: includes/admin-summary.php:299
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:261
+#: src/editor/settings/shared.js:278
 msgid "Logged-out visitors"
 msgstr "Visiteurs non connectés"
 
 #. translators: %s: list of roles.
-#: includes/admin-summary.php:302
+#: includes/admin-summary.php:306
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:267
+#: src/editor/settings/shared.js:284
 msgid "Except %s"
 msgstr "Sauf %s"
 
-#: includes/admin-summary.php:312
+#: includes/admin-summary.php:316
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:91
 msgid "Desktop"
 msgstr "Ordinateur"
 
-#: includes/admin-summary.php:313
+#: includes/admin-summary.php:317
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:92
 msgid "Tablet"
 msgstr "Tablette"
 
-#: includes/admin-summary.php:314
+#: includes/admin-summary.php:318
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:93
 msgid "Mobile"
 msgstr "Mobile"
 
 #. translators: %s: referrer URL pattern.
-#: includes/admin-summary.php:329
+#: includes/admin-summary.php:333
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:286
+#: src/editor/settings/shared.js:303
 msgid "From “%s”"
 msgstr "Provenance « %s »"
 
-#: includes/admin-summary.php:337
-#: build/editor/sidebar-panel.js:3
-#: src/editor/settings/shared.js:335
+#: includes/admin-summary.php:359
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings/shared.js:365
 msgid "Everywhere"
 msgstr "Partout"
 
-#: includes/admin-summary.php:368
+#: includes/admin-summary.php:390
 msgctxt "popup date range"
 msgid "M j, Y"
 msgstr "d/m/Y"
 
 #. translators: 1: start date, 2: end date.
-#: includes/admin-summary.php:373
+#: includes/admin-summary.php:395
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:226
+#: src/editor/settings/shared.js:243
 msgid "%1$s → %2$s"
 msgstr "%1$s → %2$s"
 
 #. translators: %s: start date.
-#: includes/admin-summary.php:376
+#: includes/admin-summary.php:398
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:228
+#: src/editor/settings/shared.js:245
 msgid "From %s"
 msgstr "À partir du %s"
 
 #. translators: %s: end date.
-#: includes/admin-summary.php:379
+#: includes/admin-summary.php:401
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:230
+#: src/editor/settings/shared.js:247
 msgid "Until %s"
 msgstr "Jusqu’au %s"
 
 #. translators: %s: date range.
-#: includes/admin-summary.php:387
+#: includes/admin-summary.php:409
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:237
+#: src/editor/settings/shared.js:254
 msgid "%s (ended)"
 msgstr "%s (terminée)"
 
 #. translators: %s: date range.
-#: includes/admin-summary.php:391
+#: includes/admin-summary.php:413
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:240
+#: src/editor/settings/shared.js:257
 msgid "%s (ends before the publication)"
 msgstr "%s (se termine avant la publication)"
 
 #. translators: %s: date range.
-#: includes/admin-summary.php:395
+#: includes/admin-summary.php:417
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:243
+#: src/editor/settings/shared.js:260
 msgid "%s (upcoming)"
 msgstr "%s (à venir)"
 
-#: includes/admin-summary.php:440
+#: includes/admin-summary.php:462
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:79
 msgid "top left"
 msgstr "en haut à gauche"
 
-#: includes/admin-summary.php:441
+#: includes/admin-summary.php:463
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:80
 msgid "top"
 msgstr "en haut"
 
-#: includes/admin-summary.php:442
+#: includes/admin-summary.php:464
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:81
 msgid "top right"
 msgstr "en haut à droite"
 
-#: includes/admin-summary.php:443
+#: includes/admin-summary.php:465
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:82
 msgid "center left"
 msgstr "au centre à gauche"
 
-#: includes/admin-summary.php:444
+#: includes/admin-summary.php:466
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:83
 msgid "center"
 msgstr "au centre"
 
-#: includes/admin-summary.php:445
+#: includes/admin-summary.php:467
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:84
 msgid "center right"
 msgstr "au centre à droite"
 
-#: includes/admin-summary.php:446
+#: includes/admin-summary.php:468
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:85
 msgid "bottom left"
 msgstr "en bas à gauche"
 
-#: includes/admin-summary.php:447
+#: includes/admin-summary.php:469
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:86
 msgid "bottom"
 msgstr "en bas"
 
-#: includes/admin-summary.php:448
+#: includes/admin-summary.php:470
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/shared.js:87
 msgid "bottom right"
 msgstr "en bas à droite"
 
-#: includes/admin-summary.php:449
+#: includes/admin-summary.php:471
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/preview.js:32
 msgid "fullscreen"
 msgstr "plein écran"
 
-#: includes/admin-summary.php:452
+#: includes/admin-summary.php:474
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/preview.js:25
 msgid "small"
 msgstr "petite"
 
-#: includes/admin-summary.php:453
+#: includes/admin-summary.php:475
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/preview.js:26
 msgid "medium"
 msgstr "moyenne"
 
-#: includes/admin-summary.php:454
+#: includes/admin-summary.php:476
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/preview.js:27
 msgid "large"
 msgstr "grande"
 
 #. translators: 1: position, 2: animation.
-#: includes/admin-summary.php:478
+#: includes/admin-summary.php:500
 #: build/editor/sidebar-panel.js:1
 #: src/editor/settings/preview.js:32
 msgid "Appearance: %1$s, %2$s animation"
 msgstr "Apparence : %1$s, animation %2$s"
 
 #. translators: 1: position, 2: size, 3: animation.
-#: includes/admin-summary.php:480
+#: includes/admin-summary.php:502
 #: build/editor/sidebar-panel.js:2
 #: src/editor/settings/preview.js:35
 msgid "Appearance: %1$s, %2$s size, %3$s animation"
 msgstr "Apparence : %1$s, taille %2$s, animation %3$s"
 
-#: includes/admin-summary.php:482
+#: includes/admin-summary.php:504
 #: build/editor/sidebar-panel.js:2
 #: src/editor/settings/preview.js:41
 msgid "with overlay"
 msgstr "avec voile"
 
-#: includes/admin-summary.php:482
+#: includes/admin-summary.php:504
 #: build/editor/sidebar-panel.js:2
 #: src/editor/settings/preview.js:41
 msgid "without overlay"
@@ -1020,28 +1020,28 @@ msgid "Animation: %s"
 msgstr "Animation : %s"
 
 #. translators: 1: taxonomy name, 2: list of terms.
-#: includes/admin-summary.php:253
+#: includes/admin-summary.php:256
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:214
+#: src/editor/settings/shared.js:231
 msgid "%1$s: all except %2$s"
 msgstr "%1$s : tous sauf %2$s"
 
 #. translators: 1: taxonomy name, 2: list of terms.
 #: includes/admin-summary.php:219
-#: includes/admin-summary.php:255
+#: includes/admin-summary.php:258
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:215
+#: src/editor/settings/shared.js:232
 msgid "%1$s: %2$s"
 msgstr "%1$s : %2$s"
 
-#: includes/admin-summary.php:260
+#: includes/admin-summary.php:264
 msgid "Child terms included"
 msgstr "Termes enfants inclus"
 
 #: build/editor/sidebar-panel.js:1
 #: build/editor/sidebar-panel.js:3
 #: src/editor/settings/conditions-tab.js:123
-#: src/editor/settings/shared.js:203
+#: src/editor/settings/shared.js:220
 msgid "Taxonomy"
 msgstr "Taxonomie"
 
@@ -1070,11 +1070,11 @@ msgstr "Termes"
 msgid "Include child terms"
 msgstr "Inclure les termes enfants"
 
-#: includes/admin-summary.php:261
+#: includes/admin-summary.php:265
 msgid "Term archives included"
 msgstr "Archives des termes incluses"
 
-#: includes/admin-summary.php:261
+#: includes/admin-summary.php:265
 msgid "Contents only, not the archives"
 msgstr "Contenus seulement, pas les archives"
 
@@ -1133,7 +1133,7 @@ msgid "Private"
 msgstr "Privé"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:176
+#: src/editor/settings/shared.js:193
 msgid "Specific contents"
 msgstr "Contenus spécifiques"
 
@@ -1207,13 +1207,13 @@ msgid "Done"
 msgstr "Terminé"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:181
+#: src/editor/settings/shared.js:198
 msgid "No content selected: no restriction."
 msgstr "Aucun contenu sélectionné : pas de restriction."
 
 #. translators: %d: number of contents.
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:186
+#: src/editor/settings/shared.js:203
 msgid "Everywhere except %d content"
 msgid_plural "Everywhere except %d contents"
 msgstr[0] "Partout sauf sur %d contenu"
@@ -1221,7 +1221,7 @@ msgstr[1] "Partout sauf sur %d contenus"
 
 #. translators: %d: number of contents.
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:187
+#: src/editor/settings/shared.js:204
 msgid "Only on %d content"
 msgid_plural "Only on %d contents"
 msgstr[0] "Uniquement sur %d contenu"
@@ -1234,36 +1234,36 @@ msgid "Only the contents in %s, the language of this popup, are listed. Their tr
 msgstr "Seuls les contenus en %s, la langue de cette popup, sont proposés. Leurs traductions sont aussi concernées."
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:198
-#: src/editor/settings/shared.js:277
+#: src/editor/settings/shared.js:215
+#: src/editor/settings/shared.js:294
 msgid "None selected"
 msgstr "Aucun sélectionné"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:209
+#: src/editor/settings/shared.js:226
 msgid "No term selected: no restriction."
 msgstr "Aucun terme sélectionné : pas de restriction."
 
 #. translators: %d: number of terms.
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:211
+#: src/editor/settings/shared.js:228
 msgid "%d term"
 msgid_plural "%d terms"
 msgstr[0] "%d terme"
 msgstr[1] "%d termes"
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:232
+#: src/editor/settings/shared.js:249
 msgid "No date set: no restriction."
 msgstr "Aucune date définie : pas de restriction."
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:263
+#: src/editor/settings/shared.js:280
 msgid "No role selected: no restriction."
 msgstr "Aucun rôle sélectionné : pas de restriction."
 
 #: build/editor/sidebar-panel.js:1
-#: src/editor/settings/shared.js:287
+#: src/editor/settings/shared.js:304
 msgid "No pattern set: no restriction."
 msgstr "Aucun motif défini : pas de restriction."
 
@@ -1283,35 +1283,35 @@ msgid "Show the popup on these devices"
 msgstr "Afficher la popup sur ces appareils"
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:331
+#: src/editor/settings/conditions-tab.js:333
 msgid "The popup is shown when all these conditions are met."
 msgstr "La popup s’affiche quand toutes ces conditions sont remplies."
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:332
+#: src/editor/settings/conditions-tab.js:334
 msgid "No condition: the popup is shown everywhere."
 msgstr "Aucune condition : la popup s’affiche partout."
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:358
+#: src/editor/settings/conditions-tab.js:361
 msgid "Edit"
 msgstr "Modifier"
 
 #. translators: %s: condition name.
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:363
+#: src/editor/settings/conditions-tab.js:366
 msgid "Remove the condition “%s”"
 msgstr "Retirer la condition « %s »"
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/settings/conditions-tab.js:379
-#: src/editor/settings/conditions-tab.js:380
+#: src/editor/settings/conditions-tab.js:392
+#: src/editor/settings/conditions-tab.js:393
 msgid "Add a condition"
 msgstr "Ajouter une condition"
 
 #: build/editor/sidebar-panel.js:3
 #: src/editor/sidebar-panel.js:129
-#: src/editor/sidebar-panel.js:184
+#: src/editor/sidebar-panel.js:212
 msgid "Popup settings"
 msgstr "Réglages de la popup"
 
@@ -1327,20 +1327,37 @@ msgstr "Les modifications s’appliquent tout de suite. Enregistrez la popup pou
 
 #: build/editor/sidebar-panel.js:3
 #: src/editor/sidebar-panel.js:165
-msgid "Warning: this setting prevents the popup from being shown."
-msgstr "Attention : ce réglage empêche l’affichage de la popup."
+msgid "Warning: check this setting, it may prevent the popup from being shown."
+msgstr "Attention : vérifiez ce réglage, il peut empêcher l’affichage de la popup."
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/sidebar-panel.js:190
+#: src/editor/sidebar-panel.js:218
 msgid "Edit the appearance"
 msgstr "Modifier l’apparence"
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/sidebar-panel.js:201
+#: src/editor/sidebar-panel.js:229
 msgid "Analytics enabled"
 msgstr "Statistiques activées"
 
 #: build/editor/sidebar-panel.js:3
-#: src/editor/sidebar-panel.js:207
+#: src/editor/sidebar-panel.js:235
 msgid "Edit the settings…"
 msgstr "Modifier les réglages…"
+
+#. translators: %s: condition summary.
+#: includes/admin-summary.php:351
+#: build/editor/sidebar-panel.js:1
+#: src/editor/settings/shared.js:357
+msgid "%s (redundant with the chosen contents)"
+msgstr "%s (redondant avec les contenus choisis)"
+
+#: build/editor/sidebar-panel.js:3
+#: src/editor/settings/conditions-tab.js:373
+msgid "The popup is already limited to the chosen contents: this condition can only remove some of them. Remove it, or switch \"Specific contents\" to \"Everywhere except these contents\"."
+msgstr "La popup est déjà limitée aux contenus choisis : cette condition ne peut qu’en retirer certains. Retirez-la, ou passez « Contenus spécifiques » en « Partout sauf sur ces contenus »."
+
+#: build/editor/sidebar-panel.js:3
+#: src/editor/settings/conditions-tab.js:405
+msgid "Not needed: the popup is limited to the chosen contents."
+msgstr "Inutile : la popup est limitée aux contenus choisis."

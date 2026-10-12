@@ -162,7 +162,7 @@ function SummaryRow( { term, values, onClick } ) {
 						{ value.label }
 					</span>
 				) ) }
-				{ hasWarning && <span className="screen-reader-text">{ __( 'Warning: this setting prevents the popup from being shown.', 'wp-popup-manager' ) }</span> }
+				{ hasWarning && <span className="screen-reader-text">{ __( 'Warning: check this setting, it may prevent the popup from being shown.', 'wp-popup-manager' ) }</span> }
 			</button>
 		</li>
 	);

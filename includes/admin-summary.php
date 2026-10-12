@@ -231,7 +231,10 @@ function popup_manager_summary_conditions( array $conditions, int $post_id ): ar
 					return $object ? $object->labels->singular_name : $type;
 				}, $values );
 
-				$chips[] = array( 'label' => implode( ', ', $names ) );
+				$chips[] = array(
+					'type'  => 'post_type',
+					'label' => implode( ', ', $names ),
+				);
 				break;
 
 			case 'taxonomy':
@@ -255,6 +258,7 @@ function popup_manager_summary_conditions( array $conditions, int $post_id ): ar
 					: __( '%1$s: %2$s', 'wp-popup-manager' );
 
 				$chips[] = array(
+					'type'  => 'taxonomy',
 					'label' => sprintf( $format, $taxonomy->labels->name, implode( ', ', $names ) ),
 					'title' => implode( ' · ', array_filter( array(
 						is_taxonomy_hierarchical( $taxonomy->name ) && ( $condition['children'] ?? true ) ? __( 'Child terms included', 'wp-popup-manager' ) : '',
@@ -329,6 +333,24 @@ function popup_manager_summary_conditions( array $conditions, int $post_id ): ar
 					$chips[] = array( 'label' => sprintf( __( 'From “%s”', 'wp-popup-manager' ), $pattern ) );
 				}
 				break;
+		}
+	}
+
+	// "Only on these contents": content types and taxonomy can only remove some of them.
+	$limited = false;
+	foreach ( $conditions as $condition ) {
+		if ( is_array( $condition ) && 'page' === ( $condition['type'] ?? '' ) && 'include' === ( $condition['operator'] ?? 'include' ) && array_filter( (array) ( $condition['ids'] ?? array() ) ) ) {
+			$limited = true;
+		}
+	}
+
+	if ( $limited ) {
+		foreach ( $chips as $index => $chip ) {
+			if ( in_array( $chip['type'] ?? '', array( 'post_type', 'taxonomy' ), true ) ) {
+				/* translators: %s: condition summary. */
+				$chips[ $index ]['label'] = sprintf( __( '%s (redundant with the chosen contents)', 'wp-popup-manager' ), $chip['label'] );
+				$chips[ $index ]['state'] = 'warning';
+			}
 		}
 	}
 

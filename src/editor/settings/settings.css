@@ -277,6 +277,14 @@
 	font-weight: 500;
 }
 
+.popup-manager-card__notice {
+	padding: 0 16px 12px;
+}
+
+.popup-manager-card__notice .components-notice {
+	margin: 0;
+}
+
 .popup-manager-card__body {
 	padding: 16px;
 	border-top: 1px solid #e0e0e0;

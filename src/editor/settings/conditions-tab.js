@@ -26,7 +26,7 @@ import {
 } from '@wordpress/components';
 
 import ContentPicker from '../content-picker';
-import { DEVICES, conditionTypes, dateRangeState, usePopupMeta, useSummaryContext } from './shared';
+import { DEVICES, REDUNDANT_WITH_CONTENTS, conditionTypes, dateRangeState, describeConditions, isLimitedToContents, usePopupMeta, useSummaryContext } from './shared';
 
 /**
  * Post types that are never displayed as a page of their own.
@@ -323,6 +323,8 @@ export default function ConditionsTab() {
 	// Cards follow the display order of the types, not the order of addition.
 	const active = types.filter( ( definition ) => conditions.some( ( c ) => c.type === definition.type ) );
 	const available = types.filter( ( definition ) => ! conditions.some( ( c ) => c.type === definition.type ) );
+	const limited = isLimitedToContents( conditions );
+	const summaries = describeConditions( conditions, context );
 
 	return (
 		<VStack spacing={ 4 }>
@@ -334,7 +336,8 @@ export default function ConditionsTab() {
 
 			{ active.map( ( definition ) => {
 				const condition = conditions.find( ( c ) => c.type === definition.type );
-				const summary = definition.describe( condition, context );
+				const summary = summaries.find( ( item ) => item.type === definition.type ) || definition.describe( condition, context );
+				const isRedundant = limited && REDUNDANT_WITH_CONTENTS.includes( definition.type );
 				const isOpen = openType === definition.type;
 				const bodyId = `popup-manager-condition-${ definition.type }`;
 
@@ -364,6 +367,16 @@ export default function ConditionsTab() {
 								onClick={ () => remove( definition.type ) }
 							/>
 						</div>
+						{ isRedundant && (
+							<div className="popup-manager-card__notice">
+								<Notice status="warning" isDismissible={ false }>
+									{ __(
+										'The popup is already limited to the chosen contents: this condition can only remove some of them. Remove it, or switch "Specific contents" to "Everywhere except these contents".',
+										'wp-popup-manager'
+									) }
+								</Notice>
+							</div>
+						) }
 						{ isOpen && (
 							<div id={ bodyId } className="popup-manager-card__body">
 								<ConditionEditor condition={ condition } onChange={ ( data ) => update( definition.type, data ) } />
@@ -377,22 +390,28 @@ export default function ConditionsTab() {
 				<DropdownMenu
 					icon="plus"
 					label={ __( 'Add a condition', 'wp-popup-manager' ) }
-					toggleProps={ { variant: 'secondary', children: __( 'Add a condition', 'wp-popup-manager' ), className: 'popup-manager-settings__add' } }
+					toggleProps={ { variant: 'secondary', children: __( 'Add a condition', 'wp-popup-manager' ), className: 'popup-manager-settings__add', showTooltip: false } }
 					popoverProps={ { placement: 'bottom-start' } }
 				>
 					{ ( { onClose } ) => (
 						<MenuGroup>
-							{ available.map( ( definition ) => (
-								<MenuItem
-									key={ definition.type }
-									onClick={ () => {
-										add( definition.type );
-										onClose();
-									} }
-								>
-									{ definition.label }
-								</MenuItem>
-							) ) }
+							{ available.map( ( definition ) => {
+								const isRedundant = limited && REDUNDANT_WITH_CONTENTS.includes( definition.type );
+
+								return (
+									<MenuItem
+										key={ definition.type }
+										disabled={ isRedundant }
+										info={ isRedundant ? __( 'Not needed: the popup is limited to the chosen contents.', 'wp-popup-manager' ) : undefined }
+										onClick={ () => {
+											add( definition.type );
+											onClose();
+										} }
+									>
+										{ definition.label }
+									</MenuItem>
+								);
+							} ) }
 						</MenuGroup>
 					) }
 				</DropdownMenu>
