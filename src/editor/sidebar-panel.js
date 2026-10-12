@@ -35,6 +35,8 @@ import {
 	__experimentalVStack as VStack,
 } from '@wordpress/components';
 
+import ContentPicker from './content-picker';
+
 /**
  * Hook to read/write a post_meta of the popup CPT.
  */
@@ -208,68 +210,6 @@ function TriggerPanel() {
 				) }
 			</VStack>
 		</PluginDocumentSettingPanel>
-	);
-}
-
-/**
- * Page selector sub-component with FormTokenField.
- * Searches pages by title, stores IDs.
- */
-function PageSelector( { ids, operator, onChangeIds, onChangeOperator } ) {
-	// Load all pages (lightweight, _fields=id,title).
-	const pages = useSelect( ( select ) => {
-		return (
-			select( 'core' ).getEntityRecords( 'postType', 'page', {
-				per_page: 100,
-				_fields: 'id,title',
-				orderby: 'title',
-				order: 'asc',
-			} ) || []
-		);
-	}, [] );
-
-	// Map ID → title for display.
-	const idToTitle = {};
-	const suggestions = [];
-	pages.forEach( ( p ) => {
-		const title = p.title.rendered || `#${ p.id }`;
-		idToTitle[ p.id ] = title;
-		suggestions.push( title );
-	} );
-
-	// Reverse map title → ID.
-	const titleToId = {};
-	pages.forEach( ( p ) => {
-		titleToId[ p.title.rendered || `#${ p.id }` ] = p.id;
-	} );
-
-	// Current tokens (titles from IDs).
-	const tokens = ids.map( ( id ) => idToTitle[ id ] || `#${ id }` );
-
-	return (
-		<>
-			<SelectControl
-				label={ __( 'Operator', 'wp-popup-manager' ) }
-				value={ operator }
-				options={ [
-					{ value: 'include', label: __( 'Include', 'wp-popup-manager' ) },
-					{ value: 'exclude', label: __( 'Exclude', 'wp-popup-manager' ) },
-				] }
-				onChange={ onChangeOperator }
-			/>
-			<FormTokenField
-				label={ __( 'Pages', 'wp-popup-manager' ) }
-				value={ tokens }
-				suggestions={ suggestions }
-				onChange={ ( newTokens ) => {
-					const newIds = newTokens
-						.map( ( token ) => titleToId[ token ] )
-						.filter( Boolean );
-					onChangeIds( newIds );
-				} }
-				__experimentalExpandOnFocus
-			/>
-		</>
 	);
 }
 
@@ -459,9 +399,9 @@ function ConditionsPanel() {
 			icon="filter"
 		>
 			<VStack spacing={ 4 }>
-				{ /* Specific pages */ }
+				{ /* Specific contents (historical condition type: "page") */ }
 				<ToggleControl
-					label={ __( 'Specific pages', 'wp-popup-manager' ) }
+					label={ __( 'Specific contents', 'wp-popup-manager' ) }
 					checked={ hasCondition( 'page' ) }
 					onChange={ ( checked ) => {
 						if ( checked ) {
@@ -472,11 +412,10 @@ function ConditionsPanel() {
 					} }
 				/>
 				{ hasCondition( 'page' ) && (
-					<PageSelector
+					<ContentPicker
 						ids={ pageCondition?.ids || [] }
 						operator={ pageCondition?.operator || 'include' }
-						onChangeIds={ ( ids ) => updateCondition( 'page', { ids } ) }
-						onChangeOperator={ ( operator ) => updateCondition( 'page', { operator } ) }
+						onChange={ ( data ) => updateCondition( 'page', data ) }
 					/>
 				) }
 

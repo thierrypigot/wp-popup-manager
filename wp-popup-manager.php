@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       WP Popup Manager
  * Description:       Accessible popup manager natively integrated with Gutenberg — RGAA/WCAG 2.2 AA compliant, eco-designed (RGESN), Interactivity API powered.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Requires at least: 6.6
  * Requires PHP:      8.1
  * Author:            WeAre[WP]
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'POPUP_MANAGER_VERSION', '1.3.0' );
+define( 'POPUP_MANAGER_VERSION', '1.3.1' );
 define( 'POPUP_MANAGER_FILE', __FILE__ );
 define( 'POPUP_MANAGER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'POPUP_MANAGER_URL', plugin_dir_url( __FILE__ ) );
@@ -80,6 +80,16 @@ add_action( 'enqueue_block_editor_assets', function () {
 		$asset['version'],
 		true
 	);
+
+	// Styles of the "Specific contents" modal, rendered in the editor page, not in the canvas iframe.
+	if ( file_exists( POPUP_MANAGER_PATH . 'build/editor/sidebar-panel.css' ) ) {
+		wp_enqueue_style(
+			'popup-manager-sidebar',
+			POPUP_MANAGER_URL . 'build/editor/sidebar-panel.css',
+			array( 'wp-components' ),
+			$asset['version']
+		);
+	}
 
 	wp_set_script_translations(
 		'popup-manager-sidebar',

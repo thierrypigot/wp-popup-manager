@@ -1,0 +1,77 @@
+/* "Specific contents" picker. Loaded in the editor page: the modal is not in the canvas iframe. */
+
+.popup-manager-picker-summary p {
+	margin: 0 0 8px;
+	color: #1e1e1e;
+}
+
+.popup-manager-picker__body {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.popup-manager-picker__toolbar {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.popup-manager-picker__types {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+}
+
+.popup-manager-picker__selection-tab {
+	margin-left: auto;
+}
+
+.popup-manager-picker__results {
+	min-height: 240px;
+}
+
+.popup-manager-picker__list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid #e0e0e0;
+}
+
+.popup-manager-picker__item {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 4px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.popup-manager-picker__item .components-base-control {
+	flex: 1;
+	min-width: 0;
+}
+
+.popup-manager-picker__item .components-checkbox-control__label {
+	overflow-wrap: anywhere;
+}
+
+.popup-manager-picker__view {
+	flex: none;
+}
+
+.popup-manager-picker__empty {
+	color: #757575;
+}
+
+.popup-manager-picker__footer {
+	display: flex;
+	justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+	.popup-manager-picker__selection-tab {
+		margin-left: 0;
+	}
+}

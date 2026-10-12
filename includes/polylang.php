@@ -12,6 +12,7 @@
  *   Without a published translation, the original popup is loaded anyway, so
  *   that the button never does nothing.
  * - Creating a translation copies the popup settings, never the statistics.
+ * - The "Specific contents" picker shows the language of each content.
  *
  * Every function is a no-op without Polylang.
  *
@@ -214,5 +215,35 @@ function popup_manager_pll_enqueue_fallback(): void {
 function popup_manager_pll_print_fallback(): void {
 	if ( ! is_admin() ) {
 		popup_manager_print_popups( popup_manager_pll_fallback_popups() );
+	}
+}
+
+add_action( 'rest_api_init', 'popup_manager_pll_rest_language' );
+
+/**
+ * Expose the language of translated contents to the "Specific contents"
+ * picker. Polylang (free) does not add it to the REST API. Only computed when
+ * requested through _fields.
+ */
+function popup_manager_pll_rest_language(): void {
+	if ( ! function_exists( 'pll_get_post_language' ) || ! function_exists( 'pll_is_translated_post_type' ) ) {
+		return;
+	}
+
+	foreach ( get_post_types( array( 'show_in_rest' => true ) ) as $post_type ) {
+		if ( ! pll_is_translated_post_type( $post_type ) ) {
+			continue;
+		}
+
+		register_rest_field( $post_type, 'popup_manager_lang', array(
+			'get_callback' => function ( $item ) {
+				return (string) pll_get_post_language( (int) $item['id'] );
+			},
+			'schema'       => array(
+				'type'     => 'string',
+				'context'  => array( 'edit' ),
+				'readonly' => true,
+			),
+		) );
 	}
 }

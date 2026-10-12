@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ WP Popup Manager est une extension WordPress de gestion de popups conçue de A �
 1. Créez une nouvelle popup (Popups > Ajouter)
 2. Ajoutez du contenu avec des blocs Gutenberg
 3. Configurez le déclencheur dans la barre latérale (clic, chargement de page, défilement, section atteinte, exit intent, inactivité)
-4. Définissez les conditions d'affichage (pages, types de contenu, taxonomie, plage de dates, heure, rôle utilisateur, appareil, référent)
+4. Définissez les conditions d'affichage (contenus spécifiques, types de contenu, taxonomie, plage de dates, heure, rôle utilisateur, appareil, référent)
 5. Choisissez l'apparence (animation, grille de position, taille, overlay avec pipette de couleur)
 6. Définissez la fréquence (à chaque visite, une fois par session, une fois par jour, une seule fois)
 7. Activez optionnellement les analytics (suivi des impressions et fermetures via Beacon API)
@@ -159,6 +159,11 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.3.1 =
+* La condition « Pages spécifiques » devient « Contenus spécifiques » : elle accepte les articles et tous les types de contenu publics, plus seulement les pages. Les popups existantes continuent de fonctionner sans changement
+* Le choix des contenus se fait dans une fenêtre dédiée : filtre par type de contenu, recherche sur le serveur (adaptée aux sites qui ont beaucoup de contenus), et pour chaque résultat le type, la date ou l'état, la page parente et la langue, pour départager les contenus de même titre. La barre latérale n'affiche plus qu'un résumé
+* Dans la liste des popups, la pastille indique le nombre de contenus, et leur répartition par type au survol
 
 = 1.3.0 =
 * Nouvelle colonne « Active » dans la liste des popups : un interrupteur active ou désactive une popup publiée en un clic, sans l'ouvrir ni changer son statut. Une popup désactivée reste publiée mais n'est plus affichée sur le site

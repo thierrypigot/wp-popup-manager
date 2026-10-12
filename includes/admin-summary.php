@@ -191,14 +191,33 @@ function popup_manager_summary_conditions( array $conditions, int $post_id ): ar
 
 				$count = count( $ids );
 				$label = $exclude
-					/* translators: %s: number of pages. */
-					? sprintf( _n( 'Except %s page', 'Except %s pages', $count, 'wp-popup-manager' ), number_format_i18n( $count ) )
-					/* translators: %s: number of pages. */
-					: sprintf( _n( '%s page', '%s pages', $count, 'wp-popup-manager' ), number_format_i18n( $count ) );
+					/* translators: %s: number of contents. */
+					? sprintf( _n( 'Except %s content', 'Except %s contents', $count, 'wp-popup-manager' ), number_format_i18n( $count ) )
+					/* translators: %s: number of contents. */
+					: sprintf( _n( '%s content', '%s contents', $count, 'wp-popup-manager' ), number_format_i18n( $count ) );
+
+				// Tooltip: count per content type, then the first titles.
+				$per_type = array();
+				foreach ( $ids as $id ) {
+					$type_object = get_post_type_object( (string) get_post_type( $id ) );
+					$type_name   = $type_object ? $type_object->labels->singular_name : __( 'Deleted', 'wp-popup-manager' );
+
+					$per_type[ $type_name ] = ( $per_type[ $type_name ] ?? 0 ) + 1;
+				}
+
+				$details = array();
+				foreach ( $per_type as $type_name => $type_count ) {
+					$details[] = $type_name . ' × ' . number_format_i18n( $type_count );
+				}
+
+				$titles = array_filter( array_map( 'get_the_title', array_slice( $ids, 0, 10 ) ) );
 
 				$chips[] = array(
 					'label' => $label,
-					'title' => implode( ', ', array_map( 'get_the_title', array_slice( $ids, 0, 10 ) ) ),
+					'title' => $titles
+						/* translators: 1: taxonomy name, 2: list of terms. */
+						? sprintf( __( '%1$s: %2$s', 'wp-popup-manager' ), implode( ', ', $details ), implode( ', ', $titles ) . ( $count > 10 ? '…' : '' ) )
+						: implode( ', ', $details ),
 				);
 				break;
 
