@@ -1,11 +1,6 @@
-/* "Specific contents" picker. Loaded in the editor page: the modal is not in the canvas iframe. */
+/* "Specific contents" picker, in the Conditions tab of the settings modal. */
 
-.popup-manager-picker-summary p {
-	margin: 0 0 8px;
-	color: #1e1e1e;
-}
-
-.popup-manager-picker__body {
+.popup-manager-picker {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
@@ -68,11 +63,6 @@
 
 .popup-manager-picker__empty {
 	color: #757575;
-}
-
-.popup-manager-picker__footer {
-	display: flex;
-	justify-content: flex-end;
 }
 
 @media (max-width: 600px) {

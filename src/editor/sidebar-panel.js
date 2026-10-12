@@ -1,56 +1,35 @@
 /**
- * Sidebar panels for the popup CPT.
+ * Editor UI of the popup CPT.
  *
- * On/off switch in the post status area (PluginPostStatusInfo), usable
- * once the popup is published, then 4 PluginDocumentSettingPanel panels:
- * - Triggers
- * - Display Conditions
- * - Appearance
- * - Frequency
+ * - On/off switch in the post status area (PluginPostStatusInfo), usable
+ *   once the popup is published.
+ * - "Popup settings" panel: a summary of the settings (same as the "Setup"
+ *   column of the list table), each line opening the matching tab.
+ * - Settings modal with four tabs: Trigger, Conditions, Appearance,
+ *   Frequency & analytics. Changes apply at once and are saved with the post.
  *
  * @package PopupManager
  * @since   1.0.0
+ * @since   1.4.0 Settings moved from four sidebar panels to a tabbed modal.
  */
 
 import { __ } from '@wordpress/i18n';
-import { date as formatDate } from '@wordpress/date';
 import { registerPlugin } from '@wordpress/plugins';
 import { PluginDocumentSettingPanel, PluginPostStatusInfo } from '@wordpress/editor';
-import { useEntityProp } from '@wordpress/core-data';
+import { useEffect, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
 import { createBlock, cloneBlock } from '@wordpress/blocks';
-import {
-	Button,
-	RadioControl,
-	RangeControl,
-	SelectControl,
-	ToggleControl,
-	TextControl,
-	Notice,
-	ColorPicker,
-	FormTokenField,
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	__experimentalVStack as VStack,
-} from '@wordpress/components';
+import { Button, Modal, Notice, TabPanel, ToggleControl } from '@wordpress/components';
 
-import ContentPicker from './content-picker';
+import AppearancePreview from './settings/preview';
+import TriggerTab from './settings/trigger-tab';
+import ConditionsTab from './settings/conditions-tab';
+import AppearanceTab from './settings/appearance-tab';
+import FrequencyTab from './settings/frequency-tab';
+import { describeConditions, describeFrequency, describeTrigger, usePopupMeta, useSummaryContext } from './settings/shared';
 
-/**
- * Hook to read/write a post_meta of the popup CPT.
- */
-function usePopupMeta( metaKey, defaultValue ) {
-	const postType = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostType(), [] );
-	const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
-
-	const value = meta?.[ metaKey ] ?? defaultValue;
-	const setValue = ( newValue ) => {
-		setMeta( { ...meta, [ metaKey ]: newValue } );
-	};
-
-	return [ value, setValue ];
-}
+import './settings/settings.css';
 
 /**
  * On/off switch, same meta as the switch of the list table.
@@ -58,21 +37,18 @@ function usePopupMeta( metaKey, defaultValue ) {
  * @since 1.3.0
  */
 function EnabledToggle() {
-	const [ enabled, setEnabled ] = usePopupMeta( '_popup_enabled', true );
+	const [ meta, setMeta ] = usePopupMeta();
 	// Saved status: until the popup is published, the switch stays off and cannot be used.
-	const isPublished = useSelect(
-		( select ) => 'publish' === select( 'core/editor' ).getCurrentPostAttribute( 'status' ),
-		[]
-	);
+	const isPublished = useSelect( ( select ) => 'publish' === select( 'core/editor' ).getCurrentPostAttribute( 'status' ), [] );
 
 	return (
 		<PluginPostStatusInfo className="popup-manager-enabled-toggle">
 			<ToggleControl
 				__nextHasNoMarginBottom
 				label={ __( 'Popup active', 'wp-popup-manager' ) }
-				checked={ isPublished && !! enabled }
+				checked={ isPublished && !! meta._popup_enabled }
 				disabled={ ! isPublished }
-				onChange={ setEnabled }
+				onChange={ ( value ) => setMeta( '_popup_enabled', value ) }
 				help={
 					isPublished
 						? __( 'A disabled popup stays published but is no longer shown on the site.', 'wp-popup-manager' )
@@ -80,546 +56,6 @@ function EnabledToggle() {
 				}
 			/>
 		</PluginPostStatusInfo>
-	);
-}
-
-/**
- * Triggers panel.
- */
-function TriggerPanel() {
-	const [ triggers, setTriggers ] = usePopupMeta( '_popup_triggers', [ { type: 'click' } ] );
-
-	// Single trigger (exclusive selection).
-	const currentTrigger = triggers[ 0 ] || { type: 'click' };
-	const triggerType = currentTrigger.type;
-	const isAutoTrigger = triggerType !== 'click';
-
-	const setTrigger = ( type ) => {
-		const newTrigger = { type };
-		if ( type === 'on_load' ) {
-			newTrigger.delay = 3;
-		}
-		if ( type === 'scroll' ) {
-			newTrigger.threshold = 50;
-			newTrigger.openDelay = 0;
-		}
-		if ( type === 'section' ) {
-			newTrigger.anchor = '';
-			newTrigger.openDelay = 0;
-		}
-		if ( type === 'inactivity' ) {
-			newTrigger.delay = 30;
-		}
-		setTriggers( [ newTrigger ] );
-	};
-
-	const updateParam = ( key, value ) => {
-		setTriggers( [ { ...currentTrigger, [ key ]: value } ] );
-	};
-
-	return (
-		<PluginDocumentSettingPanel
-			name="popup-manager-triggers"
-			title={ __( 'Trigger', 'wp-popup-manager' ) }
-			icon="visibility"
-		>
-			<VStack spacing={ 3 }>
-				<RadioControl
-					label={ __( 'Trigger type', 'wp-popup-manager' ) }
-					selected={ triggerType }
-					options={ [
-						{ value: 'click', label: __( 'Click (trigger button)', 'wp-popup-manager' ) },
-						{ value: 'on_load', label: __( 'Page load', 'wp-popup-manager' ) },
-						{ value: 'scroll', label: __( 'Scroll depth', 'wp-popup-manager' ) },
-						{ value: 'section', label: __( 'Section reached', 'wp-popup-manager' ) },
-						{ value: 'exit_intent', label: __( 'Exit intent (mouse)', 'wp-popup-manager' ) },
-						{ value: 'inactivity', label: __( 'Inactivity', 'wp-popup-manager' ) },
-					] }
-					onChange={ setTrigger }
-				/>
-
-				{ triggerType === 'on_load' && (
-					<RangeControl
-						label={ __( 'Delay (seconds)', 'wp-popup-manager' ) }
-						value={ currentTrigger.delay ?? 3 }
-						onChange={ ( v ) => updateParam( 'delay', v ) }
-						min={ 0 }
-						max={ 30 }
-						step={ 1 }
-					/>
-				) }
-
-				{ triggerType === 'scroll' && (
-					<RangeControl
-						label={ __( 'Scroll threshold (%)', 'wp-popup-manager' ) }
-						value={ currentTrigger.threshold ?? 50 }
-						onChange={ ( v ) => updateParam( 'threshold', v ) }
-						min={ 10 }
-						max={ 100 }
-						step={ 5 }
-						help={ __( 'Popup opens when the user scrolls past this percentage of the page.', 'wp-popup-manager' ) }
-					/>
-				) }
-
-				{ triggerType === 'section' && (
-					<TextControl
-						label={ __( 'Section anchor', 'wp-popup-manager' ) }
-						value={ currentTrigger.anchor ?? '' }
-						onChange={ ( v ) => updateParam( 'anchor', v.replace( /^#/, '' ).replace( /[^A-Za-z0-9_:.-]/g, '' ) ) }
-						help={ __( 'HTML anchor of the section, without the #. Set it in the "HTML anchor" field of the block (Advanced panel). The popup is only loaded on pages that contain this anchor.', 'wp-popup-manager' ) }
-					/>
-				) }
-
-				{ triggerType === 'section' && ! currentTrigger.anchor && (
-					<Notice status="warning" isDismissible={ false }>
-						{ __( 'Without an anchor, this popup is never displayed.', 'wp-popup-manager' ) }
-					</Notice>
-				) }
-
-				{ ( triggerType === 'scroll' || triggerType === 'section' ) && (
-					<RangeControl
-						label={ __( 'Opening delay (milliseconds)', 'wp-popup-manager' ) }
-						value={ currentTrigger.openDelay ?? 0 }
-						onChange={ ( v ) => updateParam( 'openDelay', v ?? 0 ) }
-						min={ 0 }
-						max={ 10000 }
-						step={ 100 }
-						help={ __( 'Wait time between the trigger and the opening of the popup.', 'wp-popup-manager' ) }
-					/>
-				) }
-
-				{ triggerType === 'inactivity' && (
-					<RangeControl
-						label={ __( 'Inactivity delay (seconds)', 'wp-popup-manager' ) }
-						value={ currentTrigger.delay ?? 30 }
-						onChange={ ( v ) => updateParam( 'delay', v ) }
-						min={ 5 }
-						max={ 120 }
-						step={ 5 }
-						help={ __( 'Popup opens after this many seconds without user interaction.', 'wp-popup-manager' ) }
-					/>
-				) }
-
-				{ isAutoTrigger && (
-					<Notice status="warning" isDismissible={ false }>
-						{ __(
-							'This popup opens without user action. This may disrupt navigation for people using assistive technologies. Consider using a click trigger if possible.',
-							'wp-popup-manager'
-						) }
-					</Notice>
-				) }
-			</VStack>
-		</PluginDocumentSettingPanel>
-	);
-}
-
-/**
- * Post types whose taxonomies cannot target a displayed content.
- */
-const INTERNAL_POST_TYPES = [ 'nav_menu_item', 'wp_block', 'wp_template', 'wp_template_part', 'wp_navigation', 'wp_global_styles', 'wp_font_family', 'wp_font_face', 'popup' ];
-
-/**
- * Taxonomy and terms selector for the "Taxonomy" condition.
- * One taxonomy, several terms, stored by ID.
- *
- * @since 1.3.0
- */
-function TaxonomySelector( { condition, onChange } ) {
-	const taxonomySlug = condition?.taxonomy || '';
-
-	const taxonomies = useSelect(
-		( select ) =>
-			// The view context also lists the taxonomies whose terms the user cannot assign.
-			( select( 'core' ).getTaxonomies( { per_page: -1, context: 'view' } ) || [] ).filter( ( taxonomy ) =>
-				( taxonomy.types || [] ).some( ( type ) => ! INTERNAL_POST_TYPES.includes( type ) )
-			),
-		[]
-	);
-
-	const current = taxonomies.find( ( taxonomy ) => taxonomy.slug === taxonomySlug );
-
-	const terms = useSelect(
-		( select ) =>
-			current
-				? select( 'core' ).getEntityRecords( 'taxonomy', current.slug, {
-						per_page: 100,
-						_fields: 'id,name,parent',
-						orderby: 'name',
-						order: 'asc',
-				  } ) || []
-				: [],
-		[ current?.slug ]
-	);
-
-	// Token label: the term name, with its parent for hierarchical taxonomies.
-	const byId = {};
-	terms.forEach( ( term ) => {
-		byId[ term.id ] = term;
-	} );
-	const labelOf = ( term ) => {
-		const parent = term.parent ? byId[ term.parent ] : null;
-		return parent ? `${ parent.name } › ${ term.name }` : term.name;
-	};
-	const labelToId = {};
-	terms.forEach( ( term ) => {
-		labelToId[ labelOf( term ) ] = term.id;
-	} );
-
-	const ids = condition?.ids || [];
-	const tokens = ids.map( ( id ) => ( byId[ id ] ? labelOf( byId[ id ] ) : `#${ id }` ) );
-
-	return (
-		<>
-			<SelectControl
-				label={ __( 'Taxonomy', 'wp-popup-manager' ) }
-				value={ taxonomySlug }
-				options={ [
-					{ value: '', label: __( 'Choose a taxonomy', 'wp-popup-manager' ) },
-					...taxonomies.map( ( taxonomy ) => ( { value: taxonomy.slug, label: taxonomy.name } ) ),
-				] }
-				onChange={ ( taxonomy ) => onChange( { taxonomy, ids: [] } ) }
-			/>
-			{ current && (
-				<>
-					<SelectControl
-						label={ __( 'Operator', 'wp-popup-manager' ) }
-						value={ condition?.operator || 'include' }
-						options={ [
-							{ value: 'include', label: __( 'Only these terms', 'wp-popup-manager' ) },
-							{ value: 'exclude', label: __( 'All terms except these', 'wp-popup-manager' ) },
-						] }
-						onChange={ ( operator ) => onChange( { operator } ) }
-					/>
-					<FormTokenField
-						label={ __( 'Terms', 'wp-popup-manager' ) }
-						value={ tokens }
-						suggestions={ terms.map( labelOf ) }
-						onChange={ ( newTokens ) =>
-							onChange( {
-								ids: newTokens
-									.map( ( token ) => labelToId[ token ] ?? ( /^#\d+$/.test( token ) ? Number( token.slice( 1 ) ) : 0 ) )
-									.filter( Boolean ),
-							} )
-						}
-						__experimentalExpandOnFocus
-					/>
-					{ current.hierarchical && (
-						<ToggleControl
-							label={ __( 'Include child terms', 'wp-popup-manager' ) }
-							checked={ condition?.children ?? true }
-							onChange={ ( children ) => onChange( { children } ) }
-						/>
-					) }
-					<ToggleControl
-						label={ __( 'Also on the archives of these terms', 'wp-popup-manager' ) }
-						checked={ condition?.archives ?? true }
-						onChange={ ( archives ) => onChange( { archives } ) }
-					/>
-					<p className="components-base-control__help">
-						{ __(
-							'Only applies to contents that have terms of this taxonomy, and to the archives of its terms. The home page, other archives and contents without terms never match.',
-							'wp-popup-manager'
-						) }
-					</p>
-				</>
-			) }
-		</>
-	);
-}
-
-/**
- * Warning when the date range prevents the popup from ever showing:
- * range already over, or ending before the scheduled publication.
- * Same comparison as the server: site local time, Y-m-d H:i strings.
- *
- * @since 1.3.0
- */
-function DateRangeWarning( { condition } ) {
-	const postDate = useSelect( ( select ) => select( 'core/editor' ).getEditedPostAttribute( 'date' ), [] );
-
-	if ( ! condition?.end ) {
-		return null;
-	}
-
-	const endFull = `${ condition.end } ${ condition.endTime || '23:59' }`;
-	const now = formatDate( 'Y-m-d H:i' );
-	const publication = postDate ? formatDate( 'Y-m-d H:i', postDate ) : '';
-
-	let message = '';
-	if ( now > endFull ) {
-		message = __( 'This date range is over: the popup is no longer shown.', 'wp-popup-manager' );
-	} else if ( publication > now && publication > endFull ) {
-		message = __( 'This date range ends before the scheduled publication: the popup will never be shown.', 'wp-popup-manager' );
-	}
-
-	return message ? (
-		<Notice status="warning" isDismissible={ false }>
-			{ message }
-		</Notice>
-	) : null;
-}
-
-/**
- * Display Conditions panel.
- */
-function ConditionsPanel() {
-	const [ conditions, setConditions ] = usePopupMeta( '_popup_conditions', [] );
-
-	const getCondition = ( type ) => conditions.find( ( c ) => c.type === type );
-	const hasCondition = ( type ) => !! getCondition( type );
-
-	const updateCondition = ( type, data ) => {
-		const existing = conditions.find( ( c ) => c.type === type );
-		if ( existing ) {
-			setConditions(
-				conditions.map( ( c ) => ( c.type === type ? { ...c, ...data } : c ) )
-			);
-		} else {
-			setConditions( [ ...conditions, { type, ...data } ] );
-		}
-	};
-
-	const removeCondition = ( type ) => {
-		setConditions( conditions.filter( ( c ) => c.type !== type ) );
-	};
-
-	const pageCondition = getCondition( 'page' );
-	const postTypeCondition = getCondition( 'post_type' );
-	const taxonomyCondition = getCondition( 'taxonomy' );
-	const dateCondition = getCondition( 'date_range' );
-	const timeCondition = getCondition( 'time_range' );
-	const userRoleCondition = getCondition( 'user_role' );
-	const deviceCondition = getCondition( 'device' );
-	const referrerCondition = getCondition( 'referrer' );
-
-	return (
-		<PluginDocumentSettingPanel
-			name="popup-manager-conditions"
-			title={ __( 'Display Conditions', 'wp-popup-manager' ) }
-			icon="filter"
-		>
-			<VStack spacing={ 4 }>
-				{ /* Specific contents (historical condition type: "page") */ }
-				<ToggleControl
-					label={ __( 'Specific contents', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'page' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'page', { ids: [], operator: 'include' } );
-						} else {
-							removeCondition( 'page' );
-						}
-					} }
-				/>
-				{ hasCondition( 'page' ) && (
-					<ContentPicker
-						ids={ pageCondition?.ids || [] }
-						operator={ pageCondition?.operator || 'include' }
-						onChange={ ( data ) => updateCondition( 'page', data ) }
-					/>
-				) }
-
-				{ /* Content types */ }
-				<ToggleControl
-					label={ __( 'Content types', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'post_type' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'post_type', { values: [ 'page' ] } );
-						} else {
-							removeCondition( 'post_type' );
-						}
-					} }
-				/>
-				{ hasCondition( 'post_type' ) && (
-					<FormTokenField
-						label={ __( 'Content types', 'wp-popup-manager' ) }
-						value={ postTypeCondition?.values || [] }
-						suggestions={ [ 'post', 'page', 'product', 'popup' ] }
-						onChange={ ( values ) => updateCondition( 'post_type', { values } ) }
-					/>
-				) }
-
-				{ /* Taxonomy */ }
-				<ToggleControl
-					label={ __( 'Taxonomy', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'taxonomy' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'taxonomy', { taxonomy: '', ids: [], operator: 'include', children: true, archives: true } );
-						} else {
-							removeCondition( 'taxonomy' );
-						}
-					} }
-				/>
-				{ hasCondition( 'taxonomy' ) && (
-					<TaxonomySelector
-						condition={ taxonomyCondition }
-						onChange={ ( data ) => updateCondition( 'taxonomy', data ) }
-					/>
-				) }
-
-				{ /* Date range */ }
-				<ToggleControl
-					label={ __( 'Date range', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'date_range' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'date_range', { start: '', end: '' } );
-						} else {
-							removeCondition( 'date_range' );
-						}
-					} }
-				/>
-				{ hasCondition( 'date_range' ) && (
-					<>
-							<TextControl
-							label={ __( 'Start date', 'wp-popup-manager' ) }
-							type="date"
-							value={ dateCondition?.start || '' }
-							onChange={ ( value ) =>
-								updateCondition( 'date_range', { start: value } )
-							}
-						/>
-						<TextControl
-							label={ __( 'End date', 'wp-popup-manager' ) }
-							type="date"
-							value={ dateCondition?.end || '' }
-							onChange={ ( value ) =>
-								updateCondition( 'date_range', { end: value } )
-							}
-						/>
-						<TextControl
-							label={ __( 'Start time', 'wp-popup-manager' ) }
-							type="time"
-							value={ dateCondition?.startTime || '' }
-							onChange={ ( value ) =>
-								updateCondition( 'date_range', { startTime: value } )
-							}
-						/>
-						<TextControl
-							label={ __( 'End time', 'wp-popup-manager' ) }
-							type="time"
-							value={ dateCondition?.endTime || '' }
-							onChange={ ( value ) =>
-								updateCondition( 'date_range', { endTime: value } )
-							}
-						/>
-						<DateRangeWarning condition={ dateCondition } />
-					</>
-				) }
-			{ /* Time range (daily recurring — happy hour) */ }
-				<ToggleControl
-					label={ __( 'Time of day', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'time_range' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'time_range', { startTime: '17:00', endTime: '19:00' } );
-						} else {
-							removeCondition( 'time_range' );
-						}
-					} }
-				/>
-				{ hasCondition( 'time_range' ) && (
-					<>
-						<TextControl
-							label={ __( 'From', 'wp-popup-manager' ) }
-							type="time"
-							value={ timeCondition?.startTime || '17:00' }
-							onChange={ ( value ) =>
-								updateCondition( 'time_range', { startTime: value } )
-							}
-						/>
-						<TextControl
-							label={ __( 'To', 'wp-popup-manager' ) }
-							type="time"
-							value={ timeCondition?.endTime || '19:00' }
-							onChange={ ( value ) =>
-								updateCondition( 'time_range', { endTime: value } )
-							}
-							help={ __( 'Supports overnight ranges (e.g. 22:00 to 06:00).', 'wp-popup-manager' ) }
-						/>
-					</>
-				) }
-
-			{ /* User role */ }
-				<ToggleControl
-					label={ __( 'User role', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'user_role' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'user_role', { values: [], operator: 'include' } );
-						} else {
-							removeCondition( 'user_role' );
-						}
-					} }
-				/>
-				{ hasCondition( 'user_role' ) && (
-					<>
-						<SelectControl
-							label={ __( 'Operator', 'wp-popup-manager' ) }
-							value={ userRoleCondition?.operator || 'include' }
-							options={ [
-								{ value: 'include', label: __( 'Include', 'wp-popup-manager' ) },
-								{ value: 'exclude', label: __( 'Exclude', 'wp-popup-manager' ) },
-							] }
-							onChange={ ( operator ) => updateCondition( 'user_role', { operator } ) }
-						/>
-						<FormTokenField
-							label={ __( 'User roles', 'wp-popup-manager' ) }
-							value={ userRoleCondition?.values || [] }
-							suggestions={ [ 'administrator', 'editor', 'author', 'contributor', 'subscriber', 'customer', 'logged_out' ] }
-							onChange={ ( values ) => updateCondition( 'user_role', { values: values.map( ( v ) => v.toLowerCase() ) } ) }
-						/>
-					</>
-				) }
-
-				{ /* Device */ }
-				<ToggleControl
-					label={ __( 'Device type', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'device' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'device', { values: [ 'desktop' ] } );
-						} else {
-							removeCondition( 'device' );
-						}
-					} }
-				/>
-				{ hasCondition( 'device' ) && (
-					<FormTokenField
-						label={ __( 'Devices', 'wp-popup-manager' ) }
-						value={ deviceCondition?.values || [] }
-						suggestions={ [ 'desktop', 'mobile', 'tablet' ] }
-						onChange={ ( values ) => updateCondition( 'device', { values: values.map( ( v ) => v.toLowerCase() ) } ) }
-						__experimentalExpandOnFocus
-					/>
-				) }
-
-				{ /* Referrer */ }
-				<ToggleControl
-					label={ __( 'Referrer URL', 'wp-popup-manager' ) }
-					checked={ hasCondition( 'referrer' ) }
-					onChange={ ( checked ) => {
-						if ( checked ) {
-							updateCondition( 'referrer', { pattern: '' } );
-						} else {
-							removeCondition( 'referrer' );
-						}
-					} }
-				/>
-				{ hasCondition( 'referrer' ) && (
-					<TextControl
-						label={ __( 'URL pattern', 'wp-popup-manager' ) }
-						value={ referrerCondition?.pattern || '' }
-						onChange={ ( value ) => {
-							updateCondition( 'referrer', { pattern: value } );
-						} }
-						help={ __( 'Example: google.com, facebook.com', 'wp-popup-manager' ) }
-					/>
-				) }
-			</VStack>
-		</PluginDocumentSettingPanel>
 	);
 }
 
@@ -645,11 +81,8 @@ function FrameNotice() {
 
 	if ( hasFrame ) {
 		return (
-			<p style={ { margin: 0, fontSize: '12px', color: '#757575' } }>
-				{ __(
-					'Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar.',
-					'wp-popup-manager'
-				) }
+			<p className="popup-manager-settings__hint">
+				{ __( 'Background, padding, radius and shadow of the frame are set on the Popup block itself, in the block sidebar.', 'wp-popup-manager' ) }
 			</p>
 		);
 	}
@@ -673,12 +106,7 @@ function FrameNotice() {
 
 	return (
 		<Notice status="info" isDismissible={ false }>
-			<p>
-				{ __(
-					'This popup has no Popup block at the root, so its frame cannot be customised.',
-					'wp-popup-manager'
-				) }
-			</p>
+			<p>{ __( 'This popup has no Popup block at the root, so its frame cannot be customised.', 'wp-popup-manager' ) }</p>
 			<Button variant="secondary" onClick={ wrapInFrame }>
 				{ __( 'Customize the frame', 'wp-popup-manager' ) }
 			</Button>
@@ -686,192 +114,129 @@ function FrameNotice() {
 	);
 }
 
+const TABS = () => [
+	{ name: 'trigger', title: __( 'Trigger', 'wp-popup-manager' ) },
+	{ name: 'conditions', title: __( 'Conditions', 'wp-popup-manager' ) },
+	{ name: 'appearance', title: __( 'Appearance', 'wp-popup-manager' ) },
+	{ name: 'frequency', title: __( 'Frequency & Analytics', 'wp-popup-manager' ) },
+];
+
 /**
- * Appearance panel.
+ * Settings modal.
  */
-function DisplayPanel() {
-	const [ display, setDisplay ] = usePopupMeta( '_popup_display', {
-		animation: 'fade',
-		position: 'center',
-		size: 'medium',
-		overlay: true,
-		overlayColor: 'rgba(0,0,0,0.5)',
-		closeOnOverlayClick: true,
-		closeOnEsc: true,
-	} );
-
-	const update = ( key, value ) => {
-		setDisplay( { ...display, [ key ]: value } );
-	};
-
+function SettingsModal( { initialTab, onClose } ) {
 	return (
-		<PluginDocumentSettingPanel
-			name="popup-manager-display"
-			title={ __( 'Appearance', 'wp-popup-manager' ) }
-			icon="admin-appearance"
-		>
-			<VStack spacing={ 3 }>
-				<FrameNotice />
-
-				<SelectControl
-					label={ __( 'Animation', 'wp-popup-manager' ) }
-					value={ display.animation }
-					options={ [
-						{ value: 'fade', label: __( 'Fade', 'wp-popup-manager' ) },
-						{ value: 'slide-up', label: __( 'Slide up', 'wp-popup-manager' ) },
-						{ value: 'scale', label: __( 'Scale', 'wp-popup-manager' ) },
-						{ value: 'none', label: __( 'None', 'wp-popup-manager' ) },
-					] }
-					onChange={ ( v ) => update( 'animation', v ) }
-				/>
-
-				<fieldset>
-					<legend style={ { fontWeight: 600, marginBottom: '0.5em' } }>
-						{ __( 'Position', 'wp-popup-manager' ) }
-					</legend>
-					<div
-						style={ {
-							display: 'grid',
-							gridTemplateColumns: 'repeat(3, 1fr)',
-							gap: '4px',
-						} }
-						role="radiogroup"
-						aria-label={ __( 'Position', 'wp-popup-manager' ) }
-					>
-						{ [
-							{ value: 'top-left', label: '\u2196' },
-							{ value: 'top', label: '\u2191' },
-							{ value: 'top-right', label: '\u2197' },
-							{ value: 'center-left', label: '\u2190' },
-							{ value: 'center', label: '\u25CF' },
-							{ value: 'center-right', label: '\u2192' },
-							{ value: 'bottom-left', label: '\u2199' },
-							{ value: 'bottom', label: '\u2193' },
-							{ value: 'bottom-right', label: '\u2198' },
-						].map( ( { value, label } ) => (
-							<button
-								key={ value }
-								type="button"
-								role="radio"
-								aria-checked={ display.position === value }
-								aria-label={ value.replace( '-', ' ' ) }
-								onClick={ () => update( 'position', value ) }
-								style={ {
-									width: '100%',
-									padding: '8px 0',
-									fontSize: '16px',
-									lineHeight: 1,
-									border: '1px solid',
-									borderColor: display.position === value ? '#3858e9' : '#ccc',
-									borderRadius: '4px',
-									background: display.position === value ? '#3858e9' : '#fff',
-									color: display.position === value ? '#fff' : '#1e1e1e',
-									cursor: 'pointer',
-								} }
-							>
-								{ label }
-							</button>
-						) ) }
+		<Modal title={ __( 'Popup settings', 'wp-popup-manager' ) } onRequestClose={ onClose } size="large" className="popup-manager-settings">
+			<TabPanel className="popup-manager-settings__tabs" tabs={ TABS() } initialTabName={ initialTab }>
+				{ ( tab ) => (
+					<div className="popup-manager-settings__panel">
+						{ 'trigger' === tab.name && <TriggerTab /> }
+						{ 'conditions' === tab.name && <ConditionsTab /> }
+						{ 'appearance' === tab.name && <AppearanceTab frameNotice={ <FrameNotice /> } /> }
+						{ 'frequency' === tab.name && <FrequencyTab /> }
 					</div>
-					<ToggleControl
-						label={ __( 'Fullscreen', 'wp-popup-manager' ) }
-						checked={ display.position === 'fullscreen' }
-						onChange={ ( checked ) =>
-							update( 'position', checked ? 'fullscreen' : 'center' )
-						}
-						__nextHasNoMarginBottom
-					/>
-				</fieldset>
-
-				<ToggleGroupControl
-					label={ __( 'Size', 'wp-popup-manager' ) }
-					value={ display.size }
-					onChange={ ( v ) => update( 'size', v ) }
-					isBlock
-				>
-					<ToggleGroupControlOption value="small" label="S" aria-label={ __( 'Small', 'wp-popup-manager' ) } />
-					<ToggleGroupControlOption value="medium" label="M" aria-label={ __( 'Medium', 'wp-popup-manager' ) } />
-					<ToggleGroupControlOption value="large" label="L" aria-label={ __( 'Large', 'wp-popup-manager' ) } />
-				</ToggleGroupControl>
-
-				<ToggleControl
-					label={ __( 'Show overlay', 'wp-popup-manager' ) }
-					checked={ display.overlay }
-					onChange={ ( v ) => update( 'overlay', v ) }
-				/>
-
-				{ display.overlay && (
-					<>
-						<fieldset>
-							<legend style={ { fontWeight: 600, marginBottom: '0.5em' } }>
-								{ __( 'Overlay color', 'wp-popup-manager' ) }
-							</legend>
-							<ColorPicker
-								color={ display.overlayColor }
-								onChange={ ( v ) => update( 'overlayColor', v ) }
-								enableAlpha
-							/>
-						</fieldset>
-						<ToggleControl
-							label={ __( 'Close on overlay click', 'wp-popup-manager' ) }
-							checked={ display.closeOnOverlayClick }
-							onChange={ ( v ) => update( 'closeOnOverlayClick', v ) }
-						/>
-					</>
 				) }
-
-				<ToggleControl
-					label={ __( 'Close with Escape key', 'wp-popup-manager' ) }
-					checked={ display.closeOnEsc }
-					onChange={ ( v ) => update( 'closeOnEsc', v ) }
-				/>
-			</VStack>
-		</PluginDocumentSettingPanel>
+			</TabPanel>
+			<div className="popup-manager-settings__footer">
+				<p className="popup-manager-settings__hint">{ __( 'Changes apply at once. Save the popup to keep them.', 'wp-popup-manager' ) }</p>
+				<Button variant="primary" onClick={ onClose }>
+					{ __( 'Done', 'wp-popup-manager' ) }
+				</Button>
+			</div>
+		</Modal>
 	);
 }
 
 /**
- * Frequency panel.
+ * One line of the summary, opening the matching tab.
  */
-function FrequencyPanel() {
-	const [ frequency, setFrequency ] = usePopupMeta( '_popup_frequency', {
-		type: 'always',
-		cookieDuration: 30,
-	} );
-
-	const postType = useSelect( ( select ) => select( 'core/editor' ).getCurrentPostType(), [] );
-	const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
-	const analyticsEnabled = meta?._popup_analytics_enabled ?? false;
+function SummaryRow( { term, values, onClick } ) {
+	const hasWarning = values.some( ( value ) => value.warning );
 
 	return (
-		<PluginDocumentSettingPanel
-			name="popup-manager-frequency"
-			title={ __( 'Frequency & Analytics', 'wp-popup-manager' ) }
-			icon="update"
-		>
-			<VStack spacing={ 3 }>
-				<RadioControl
-					label={ __( 'Show popup', 'wp-popup-manager' ) }
-					selected={ frequency.type }
-					options={ [
-						{ value: 'always', label: __( 'Every visit', 'wp-popup-manager' ) },
-						{ value: 'once_per_session', label: __( 'Once per session', 'wp-popup-manager' ) },
-						{ value: 'once_per_day', label: __( 'Once per day', 'wp-popup-manager' ) },
-						{ value: 'once_ever', label: __( 'Once ever', 'wp-popup-manager' ) },
-					] }
-					onChange={ ( v ) => setFrequency( { ...frequency, type: v } ) }
-				/>
+		<li>
+			<button type="button" className="popup-manager-summary__row" onClick={ onClick }>
+				<span className="popup-manager-summary__term">{ term }</span>
+				{ values.map( ( value, index ) => (
+					<span key={ index } className={ `popup-manager-summary__value${ value.warning ? ' is-warning' : '' }${ value.muted ? ' is-muted' : '' }` }>
+						{ value.label }
+					</span>
+				) ) }
+				{ hasWarning && <span className="screen-reader-text">{ __( 'Warning: this setting prevents the popup from being shown.', 'wp-popup-manager' ) }</span> }
+			</button>
+		</li>
+	);
+}
 
-				<ToggleControl
-					label={ __( 'Enable analytics', 'wp-popup-manager' ) }
-					checked={ analyticsEnabled }
-					onChange={ ( v ) => setMeta( { ...meta, _popup_analytics_enabled: v } ) }
-					help={ __(
-						'Tracks impressions and closes. Adds 1 HTTP request per page view containing this popup.',
-						'wp-popup-manager'
-					) }
-				/>
-			</VStack>
+/**
+ * "Popup settings" panel of the sidebar.
+ */
+const PANEL_NAME = 'popup-manager-sidebar/popup-manager-settings';
+
+/**
+ * Open the settings panel the first time a user meets it: it is the only
+ * panel of the plugin. Closing it afterwards is remembered by the editor.
+ */
+function useOpenPanelOnce() {
+	const isOpened = useSelect( ( select ) => select( 'core/editor' ).isEditorPanelOpened?.( PANEL_NAME ), [] );
+	const { toggleEditorPanelOpened } = useDispatch( 'core/editor' );
+
+	useEffect( () => {
+		let seen = false;
+		try {
+			seen = !! window.localStorage.getItem( 'popupManagerSettingsPanelSeen' );
+			window.localStorage.setItem( 'popupManagerSettingsPanelSeen', '1' );
+		} catch ( error ) {
+			seen = true;
+		}
+
+		if ( ! seen && false === isOpened && toggleEditorPanelOpened ) {
+			toggleEditorPanelOpened( PANEL_NAME );
+		}
+		// Only on the first render.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
+}
+
+function SettingsPanel() {
+	useOpenPanelOnce();
+	const [ meta ] = usePopupMeta();
+	const context = useSummaryContext();
+	const [ openTab, setOpenTab ] = useState( null );
+
+	const trigger = describeTrigger( meta._popup_triggers[ 0 ] );
+	const conditions = describeConditions( meta._popup_conditions, context );
+	const display = meta._popup_display;
+
+	return (
+		<PluginDocumentSettingPanel name="popup-manager-settings" title={ __( 'Popup settings', 'wp-popup-manager' ) } icon="admin-generic">
+			<div className="popup-manager-summary">
+				<button
+					type="button"
+					className="popup-manager-summary__preview"
+					onClick={ () => setOpenTab( 'appearance' ) }
+					aria-label={ __( 'Edit the appearance', 'wp-popup-manager' ) }
+				>
+					<AppearancePreview display={ display } width={ 96 } />
+				</button>
+				<ul className="popup-manager-summary__list">
+					<SummaryRow term={ __( 'Trigger', 'wp-popup-manager' ) } values={ [ trigger ] } onClick={ () => setOpenTab( 'trigger' ) } />
+					<SummaryRow term={ __( 'Display', 'wp-popup-manager' ) } values={ conditions } onClick={ () => setOpenTab( 'conditions' ) } />
+					<SummaryRow
+						term={ __( 'Options', 'wp-popup-manager' ) }
+						values={ [
+							{ label: describeFrequency( meta._popup_frequency ) },
+							...( meta._popup_analytics_enabled ? [ { label: __( 'Analytics enabled', 'wp-popup-manager' ) } ] : [] ),
+						] }
+						onClick={ () => setOpenTab( 'frequency' ) }
+					/>
+				</ul>
+				<Button variant="secondary" className="popup-manager-summary__edit" onClick={ () => setOpenTab( 'trigger' ) } aria-haspopup="dialog">
+					{ __( 'Edit the settings…', 'wp-popup-manager' ) }
+				</Button>
+			</div>
+
+			{ openTab && <SettingsModal initialTab={ openTab } onClose={ () => setOpenTab( null ) } /> }
 		</PluginDocumentSettingPanel>
 	);
 }
@@ -883,10 +248,7 @@ registerPlugin( 'popup-manager-sidebar', {
 	render: () => (
 		<>
 			<EnabledToggle />
-			<TriggerPanel />
-			<ConditionsPanel />
-			<DisplayPanel />
-			<FrequencyPanel />
+			<SettingsPanel />
 		</>
 	),
 } );

@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,9 +160,13 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 
 == Changelog ==
 
-= 1.3.1 =
+= 1.4.0 =
+* Nouvelle interface des réglages : la barre latérale n'affiche plus qu'un résumé (miniature de l'apparence, déclencheur, conditions, options), dont chaque ligne ouvre l'onglet correspondant. Les réglages se modifient dans une fenêtre à quatre onglets : Déclencheur, Conditions, Apparence, Fréquence et statistiques
+* Conditions d'affichage : seules les conditions actives sont affichées, sous forme de cartes avec leur résumé, et le bouton « Ajouter une condition » propose les autres. Les réglages qui empêchent l'affichage sont signalés en rouge
+* Apparence : aperçu en direct de la position, de la taille et du voile
+* Types de contenu et appareils se choisissent par cases à cocher, avec les noms des types de contenu du site
 * La condition « Pages spécifiques » devient « Contenus spécifiques » : elle accepte les articles et tous les types de contenu publics, plus seulement les pages. Les popups existantes continuent de fonctionner sans changement
-* Le choix des contenus se fait dans une fenêtre dédiée : filtre par type de contenu, recherche sur le serveur (adaptée aux sites qui ont beaucoup de contenus), et pour chaque résultat le type, la date ou l'état, la page parente et la langue, pour départager les contenus de même titre. La barre latérale n'affiche plus qu'un résumé
+* Le choix des contenus se fait dans l'onglet Conditions : filtre par type de contenu, recherche sur le serveur (adaptée aux sites qui ont beaucoup de contenus), et pour chaque résultat le type, la date ou l'état, la page parente et la langue, pour départager les contenus de même titre
 * Avec Polylang, la fenêtre ne propose que les contenus dans la langue de la popup : sur le site, un contenu choisi couvre aussi ses traductions
 * Dans la liste des popups, la pastille indique le nombre de contenus, et leur répartition par type au survol
 

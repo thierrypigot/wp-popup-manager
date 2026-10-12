@@ -1,5 +1,6 @@
 /**
- * "Specific contents" condition: summary in the sidebar, picker in a modal.
+ * "Specific contents" condition picker, shown in the Conditions tab of the
+ * settings modal.
  *
  * The condition keeps its historical type "page" and stores post IDs of any
  * content type. The modal filters by content type, searches on the server
@@ -8,9 +9,10 @@
  *
  * @package PopupManager
  * @since   1.3.1
+ * @since   1.4.0 Panel inside the settings modal instead of a modal of its own.
  */
 
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useState, useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { useDebounce } from '@wordpress/compose';
@@ -21,7 +23,6 @@ import { dateI18n, getSettings } from '@wordpress/date';
 import {
 	Button,
 	CheckboxControl,
-	Modal,
 	RadioControl,
 	SearchControl,
 	Spinner,
@@ -161,9 +162,14 @@ function detailsOf( item, typeNames, parents ) {
 }
 
 /**
- * Picker modal.
+ * Picker panel.
+ *
+ * @param {Object}   props          Props.
+ * @param {number[]} props.ids      Selected IDs.
+ * @param {string}   props.operator "include" or "exclude".
+ * @param {Function} props.onChange Receives the changed keys of the condition.
  */
-function ContentPickerModal( { ids, operator, onChange, onClose } ) {
+export default function ContentPicker( { ids, operator, onChange } ) {
 	const types = useContentTypes();
 	const [ typeSlug, setTypeSlug ] = useState( 'post' );
 	const [ search, setSearch ] = useState( '' );
@@ -244,167 +250,120 @@ function ContentPickerModal( { ids, operator, onChange, onClose } ) {
 	const rows = showSelection ? ids.map( ( id ) => items[ id ] || { id } ) : results;
 
 	return (
-		<Modal
-			title={ __( 'Specific contents', 'wp-popup-manager' ) }
-			onRequestClose={ onClose }
-			size="large"
-			className="popup-manager-picker"
-		>
-			<div className="popup-manager-picker__body">
-				<RadioControl
-					label={ __( 'Mode', 'wp-popup-manager' ) }
-					selected={ operator }
-					options={ [
-						{ value: 'include', label: __( 'Only on these contents', 'wp-popup-manager' ) },
-						{ value: 'exclude', label: __( 'Everywhere except these contents', 'wp-popup-manager' ) },
-					] }
-					onChange={ ( value ) => onChange( { operator: value } ) }
-				/>
+		<div className="popup-manager-picker">
+			<RadioControl
+				label={ __( 'Mode', 'wp-popup-manager' ) }
+				selected={ operator }
+				options={ [
+					{ value: 'include', label: __( 'Only on these contents', 'wp-popup-manager' ) },
+					{ value: 'exclude', label: __( 'Everywhere except these contents', 'wp-popup-manager' ) },
+				] }
+				onChange={ ( value ) => onChange( { operator: value } ) }
+			/>
 
-				<div className="popup-manager-picker__toolbar">
-					<div
-						className="popup-manager-picker__types"
-						role="group"
-						aria-label={ __( 'Content type', 'wp-popup-manager' ) }
-					>
-						{ types.map( ( type ) => (
-							<Button
-								key={ type.slug }
-								variant={ ! showSelection && currentType?.slug === type.slug ? 'primary' : 'tertiary' }
-								aria-pressed={ ! showSelection && currentType?.slug === type.slug }
-								onClick={ () => {
-									setShowSelection( false );
-									setTypeSlug( type.slug );
-								} }
-							>
-								{ type.name }
-							</Button>
-						) ) }
+			<div className="popup-manager-picker__toolbar">
+				<div
+					className="popup-manager-picker__types"
+					role="group"
+					aria-label={ __( 'Content type', 'wp-popup-manager' ) }
+				>
+					{ types.map( ( type ) => (
 						<Button
-							variant={ showSelection ? 'primary' : 'secondary' }
-							aria-pressed={ showSelection }
-							onClick={ () => setShowSelection( true ) }
-							className="popup-manager-picker__selection-tab"
-						>
-							{ sprintf( /* translators: %d: number of selected contents. */ __( 'Selection (%d)', 'wp-popup-manager' ), ids.length ) }
-						</Button>
-					</div>
-
-					{ ! showSelection && language && (
-						<p className="popup-manager-picker__language">
-							{ sprintf(
-								/* translators: %s: language code, e.g. FR. */
-								__( 'Only the contents in %s, the language of this popup, are listed. Their translations are covered too.', 'wp-popup-manager' ),
-								language.toUpperCase()
-							) }
-						</p>
-					) }
-
-					{ ! showSelection && (
-						<SearchControl
-							__nextHasNoMarginBottom
-							label={ sprintf( /* translators: %s: content type name. */ __( 'Search in %s', 'wp-popup-manager' ), currentType?.name || '' ) }
-							value={ searchInput }
-							onChange={ ( value ) => {
-								setSearchInput( value );
-								debouncedSearch( value );
+							key={ type.slug }
+							variant={ ! showSelection && currentType?.slug === type.slug ? 'primary' : 'tertiary' }
+							aria-pressed={ ! showSelection && currentType?.slug === type.slug }
+							onClick={ () => {
+								setShowSelection( false );
+								setTypeSlug( type.slug );
 							} }
-						/>
-					) }
-				</div>
-
-				<div className="popup-manager-picker__results" aria-live="polite" aria-busy={ null === rows || loadingSelection }>
-					{ null === rows && <Spinner /> }
-
-					{ rows && ! rows.length && (
-						<p className="popup-manager-picker__empty">
-							{ showSelection
-								? __( 'No content selected yet.', 'wp-popup-manager' )
-								: __( 'No content found.', 'wp-popup-manager' ) }
-						</p>
-					) }
-
-					{ rows && rows.length > 0 && (
-						<ul className="popup-manager-picker__list">
-							{ rows.map( ( item ) => (
-								<li key={ item.id } className="popup-manager-picker__item">
-									<CheckboxControl
-										__nextHasNoMarginBottom
-										checked={ ids.includes( item.id ) }
-										onChange={ ( checked ) => toggle( item.id, checked ) }
-										label={
-											item.missing
-												? sprintf( /* translators: %d: content ID. */ __( 'Content #%d, deleted', 'wp-popup-manager' ), item.id )
-												: titleOf( item )
-										}
-										help={ item.missing || ! item.type ? undefined : detailsOf( item, typeNames, parents ) }
-									/>
-									{ item.link && (
-										<Button
-											variant="link"
-											href={ item.link }
-											target="_blank"
-											rel="noreferrer"
-											className="popup-manager-picker__view"
-										>
-											{ __( 'View', 'wp-popup-manager' ) }
-											<span className="screen-reader-text">
-												{ sprintf( /* translators: %s: content title. */ __( '“%s” (opens in a new tab)', 'wp-popup-manager' ), titleOf( item ) ) }
-											</span>
-										</Button>
-									) }
-								</li>
-							) ) }
-						</ul>
-					) }
-
-					{ ! showSelection && rows && rows.length === PER_PAGE && (
-						<p className="popup-manager-picker__empty">
-							{ __( 'Only the first results are listed: refine the search.', 'wp-popup-manager' ) }
-						</p>
-					) }
-				</div>
-
-				<div className="popup-manager-picker__footer">
-					<Button variant="primary" onClick={ onClose }>
-						{ __( 'Done', 'wp-popup-manager' ) }
+						>
+							{ type.name }
+						</Button>
+					) ) }
+					<Button
+						variant={ showSelection ? 'primary' : 'secondary' }
+						aria-pressed={ showSelection }
+						onClick={ () => setShowSelection( true ) }
+						className="popup-manager-picker__selection-tab"
+					>
+						{ sprintf( /* translators: %d: number of selected contents. */ __( 'Selection (%d)', 'wp-popup-manager' ), ids.length ) }
 					</Button>
 				</div>
+
+				{ ! showSelection && language && (
+					<p className="popup-manager-picker__language">
+						{ sprintf(
+							/* translators: %s: language code, e.g. FR. */
+							__( 'Only the contents in %s, the language of this popup, are listed. Their translations are covered too.', 'wp-popup-manager' ),
+							language.toUpperCase()
+						) }
+					</p>
+				) }
+
+				{ ! showSelection && (
+					<SearchControl
+						__nextHasNoMarginBottom
+						label={ sprintf( /* translators: %s: content type name. */ __( 'Search in %s', 'wp-popup-manager' ), currentType?.name || '' ) }
+						value={ searchInput }
+						onChange={ ( value ) => {
+							setSearchInput( value );
+							debouncedSearch( value );
+						} }
+					/>
+				) }
 			</div>
-		</Modal>
-	);
-}
 
-/**
- * Sidebar part: summary and button.
- */
-export default function ContentPicker( { ids, operator, onChange } ) {
-	const [ isOpen, setOpen ] = useState( false );
+			<div className="popup-manager-picker__results" aria-live="polite" aria-busy={ null === rows || loadingSelection }>
+				{ null === rows && <Spinner /> }
 
-	let summary = __( 'No content selected: no restriction.', 'wp-popup-manager' );
-	if ( ids.length ) {
-		summary = sprintf(
-			'exclude' === operator
-				? /* translators: %d: number of contents. */ _n( 'Everywhere except %d content', 'Everywhere except %d contents', ids.length, 'wp-popup-manager' )
-				: /* translators: %d: number of contents. */ _n( 'Only on %d content', 'Only on %d contents', ids.length, 'wp-popup-manager' ),
-			ids.length
-		);
-	}
+				{ rows && ! rows.length && (
+					<p className="popup-manager-picker__empty">
+						{ showSelection
+							? __( 'No content selected yet.', 'wp-popup-manager' )
+							: __( 'No content found.', 'wp-popup-manager' ) }
+					</p>
+				) }
 
-	return (
-		<div className="popup-manager-picker-summary">
-			<p>{ summary }</p>
-			<Button variant="secondary" onClick={ () => setOpen( true ) } aria-haspopup="dialog">
-				{ __( 'Choose contents…', 'wp-popup-manager' ) }
-			</Button>
-			{ isOpen && (
-				<ContentPickerModal
-					ids={ ids }
-					operator={ operator }
-					onChange={ onChange }
-					onClose={ () => setOpen( false ) }
-				/>
-			) }
+				{ rows && rows.length > 0 && (
+					<ul className="popup-manager-picker__list">
+						{ rows.map( ( item ) => (
+							<li key={ item.id } className="popup-manager-picker__item">
+								<CheckboxControl
+									__nextHasNoMarginBottom
+									checked={ ids.includes( item.id ) }
+									onChange={ ( checked ) => toggle( item.id, checked ) }
+									label={
+										item.missing
+											? sprintf( /* translators: %d: content ID. */ __( 'Content #%d, deleted', 'wp-popup-manager' ), item.id )
+											: titleOf( item )
+									}
+									help={ item.missing || ! item.type ? undefined : detailsOf( item, typeNames, parents ) }
+								/>
+								{ item.link && (
+									<Button
+										variant="link"
+										href={ item.link }
+										target="_blank"
+										rel="noreferrer"
+										className="popup-manager-picker__view"
+									>
+										{ __( 'View', 'wp-popup-manager' ) }
+										<span className="screen-reader-text">
+											{ sprintf( /* translators: %s: content title. */ __( '“%s” (opens in a new tab)', 'wp-popup-manager' ), titleOf( item ) ) }
+										</span>
+									</Button>
+								) }
+							</li>
+						) ) }
+					</ul>
+				) }
+
+				{ ! showSelection && rows && rows.length === PER_PAGE && (
+					<p className="popup-manager-picker__empty">
+						{ __( 'Only the first results are listed: refine the search.', 'wp-popup-manager' ) }
+					</p>
+				) }
+			</div>
 		</div>
 	);
 }
