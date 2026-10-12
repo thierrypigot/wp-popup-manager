@@ -244,6 +244,18 @@ function popup_manager_register_meta(): void {
 		},
 		'sanitize_callback' => 'rest_sanitize_boolean',
 	) );
+
+	// --- On/off switch of the list table ---
+	register_post_meta( 'popup', '_popup_enabled', array(
+		'show_in_rest'      => true,
+		'single'            => true,
+		'type'              => 'boolean',
+		'default'           => true,
+		'auth_callback'     => function () {
+			return current_user_can( 'edit_posts' );
+		},
+		'sanitize_callback' => 'rest_sanitize_boolean',
+	) );
 }
 
 /**

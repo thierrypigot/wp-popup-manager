@@ -25,39 +25,39 @@ add_action( 'save_post_popup', function () {
  * @return WP_Post[] Array of matching popups.
  */
 function popup_manager_get_matching( int $queried_object_id ): array {
-	$popups = popup_manager_get_published();
+	$popups = popup_manager_pll_filter_language( popup_manager_get_published() );
 
 	if ( empty( $popups ) ) {
 		return array();
 	}
 
-	$matching = array();
+	return array_values( array_filter( $popups, function ( WP_Post $popup ) use ( $queried_object_id ) {
+		return popup_manager_conditions_met( $popup, $queried_object_id );
+	} ) );
+}
 
-	foreach ( $popups as $popup ) {
-		$conditions = get_post_meta( $popup->ID, '_popup_conditions', true );
+/**
+ * Whether all the display conditions of a popup are met (AND logic).
+ *
+ * @param WP_Post $popup             Popup.
+ * @param int     $queried_object_id Current queried object ID.
+ * @return bool True when met, or when the popup has no condition.
+ */
+function popup_manager_conditions_met( WP_Post $popup, int $queried_object_id ): bool {
+	$conditions = get_post_meta( $popup->ID, '_popup_conditions', true );
 
-		if ( ! is_array( $conditions ) || empty( $conditions ) ) {
-			// No conditions → display everywhere.
-			$matching[] = $popup;
-			continue;
-		}
+	if ( ! is_array( $conditions ) || empty( $conditions ) ) {
+		// No conditions → display everywhere.
+		return true;
+	}
 
-		// AND logic: all conditions must be true.
-		$all_met = true;
-
-		foreach ( $conditions as $condition ) {
-			if ( ! popup_manager_evaluate_condition( $condition, $queried_object_id ) ) {
-				$all_met = false;
-				break;
-			}
-		}
-
-		if ( $all_met ) {
-			$matching[] = $popup;
+	foreach ( $conditions as $condition ) {
+		if ( ! popup_manager_evaluate_condition( $condition, $queried_object_id ) ) {
+			return false;
 		}
 	}
 
-	return $matching;
+	return true;
 }
 
 /**
@@ -78,9 +78,13 @@ function popup_manager_get_published(): array {
 		'posts_per_page' => 50,
 		'no_found_rows'  => true,
 		'fields'         => '',
+		'lang'           => '', // All languages: the cache is shared, filtered per request.
 	) );
 
-	$popups = $query->posts;
+	// Popups switched off from the list table are never emitted.
+	$popups = array_values( array_filter( $query->posts, function ( WP_Post $popup ) {
+		return popup_manager_is_enabled( $popup->ID );
+	} ) );
 
 	set_transient( 'popup_manager_published', $popups, HOUR_IN_SECONDS );
 
@@ -132,7 +136,8 @@ function popup_manager_evaluate_condition( array $condition, int $queried_object
 				return true;
 			}
 
-			$is_in = in_array( $queried_object_id, array_map( 'absint', $ids ), true );
+			// Translations of the chosen pages match too.
+			$is_in = in_array( $queried_object_id, popup_manager_pll_with_translations( array_map( 'absint', $ids ) ), true );
 
 			return 'include' === $operator ? $is_in : ! $is_in;
 

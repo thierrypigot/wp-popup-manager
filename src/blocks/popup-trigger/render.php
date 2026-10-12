@@ -17,6 +17,11 @@ defined( 'ABSPATH' ) || exit;
 
 $popup_id = absint( $attributes['popupId'] ?? 0 );
 
+// With Polylang, open the translation of the popup in the current language,
+// or load the original popup when there is no published translation.
+$popup_id = popup_manager_pll_translate_popup( $popup_id );
+popup_manager_pll_request_fallback( $popup_id );
+
 if ( 0 === $popup_id || empty( $content ) ) {
 	return;
 }

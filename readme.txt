@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,17 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.3.0 =
+* Nouvelle colonne « Active » dans la liste des popups : un interrupteur active ou désactive une popup publiée en un clic, sans l'ouvrir ni changer son statut. Une popup désactivée reste publiée mais n'est plus affichée sur le site
+* Tant qu'une popup n'est pas publiée (brouillon, en attente de relecture, planifiée), son interrupteur reste désactivé et grisé
+* Publier une popup, y compris à la date planifiée, la rend active
+* Vues « Actives » et « Inactives » dans la liste, et actions groupées « Activer » et « Désactiver »
+* Le même interrupteur « Popup active » est disponible dans l'éditeur, sous le statut de publication
+* Nouvelle colonne « Configuration » dans la liste : déclencheur, conditions d'affichage, fréquence, animation et options, avec une miniature de l'apparence (position, taille, voile et sa couleur)
+* Les réglages qui empêchent l'affichage sont signalés en rouge dans la liste : plage de dates terminée, plage qui se termine avant la publication planifiée, section sans ancre. L'éditeur affiche aussi un avertissement sous la plage de dates
+* Compatibilité Polylang : les popups peuvent être traduites (à activer dans Langues > Réglages). Sur le site, seules les popups de la langue de la page, ou sans langue, sont affichées. Un bouton déclencheur ouvre la traduction publiée de sa popup dans la langue de la page. Sans traduction publiée, il ouvre la popup d'origine plutôt que de ne rien faire. La condition « Pages spécifiques » couvre aussi les traductions des pages choisies. Créer une traduction recopie les réglages de la popup, jamais ses statistiques
+* Les popups existantes restent actives par défaut
 
 = 1.2.1 =
 * Correction : la couleur du voile choisie avec transparence (sélecteur de couleur, format #rrggbbaa) n'était pas enregistrée et revenait à la couleur par défaut. Les formes hexadécimales #rgb, #rgba, #rrggbb et #rrggbbaa sont désormais acceptées

@@ -1,7 +1,8 @@
 /**
  * Sidebar panels for the popup CPT.
  *
- * 4 PluginDocumentSettingPanel panels:
+ * On/off switch in the post status area (PluginPostStatusInfo), usable
+ * once the popup is published, then 4 PluginDocumentSettingPanel panels:
  * - Triggers
  * - Display Conditions
  * - Appearance
@@ -12,8 +13,9 @@
  */
 
 import { __ } from '@wordpress/i18n';
+import { date as formatDate } from '@wordpress/date';
 import { registerPlugin } from '@wordpress/plugins';
-import { PluginDocumentSettingPanel } from '@wordpress/editor';
+import { PluginDocumentSettingPanel, PluginPostStatusInfo } from '@wordpress/editor';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as blockEditorStore } from '@wordpress/block-editor';
@@ -46,6 +48,37 @@ function usePopupMeta( metaKey, defaultValue ) {
 	};
 
 	return [ value, setValue ];
+}
+
+/**
+ * On/off switch, same meta as the switch of the list table.
+ *
+ * @since 1.3.0
+ */
+function EnabledToggle() {
+	const [ enabled, setEnabled ] = usePopupMeta( '_popup_enabled', true );
+	// Saved status: until the popup is published, the switch stays off and cannot be used.
+	const isPublished = useSelect(
+		( select ) => 'publish' === select( 'core/editor' ).getCurrentPostAttribute( 'status' ),
+		[]
+	);
+
+	return (
+		<PluginPostStatusInfo className="popup-manager-enabled-toggle">
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Popup active', 'wp-popup-manager' ) }
+				checked={ isPublished && !! enabled }
+				disabled={ ! isPublished }
+				onChange={ setEnabled }
+				help={
+					isPublished
+						? __( 'A disabled popup stays published but is no longer shown on the site.', 'wp-popup-manager' )
+						: __( 'Publish the popup to be able to enable it.', 'wp-popup-manager' )
+				}
+			/>
+		</PluginPostStatusInfo>
+	);
 }
 
 /**
@@ -241,6 +274,38 @@ function PageSelector( { ids, operator, onChangeIds, onChangeOperator } ) {
 }
 
 /**
+ * Warning when the date range prevents the popup from ever showing:
+ * range already over, or ending before the scheduled publication.
+ * Same comparison as the server: site local time, Y-m-d H:i strings.
+ *
+ * @since 1.3.0
+ */
+function DateRangeWarning( { condition } ) {
+	const postDate = useSelect( ( select ) => select( 'core/editor' ).getEditedPostAttribute( 'date' ), [] );
+
+	if ( ! condition?.end ) {
+		return null;
+	}
+
+	const endFull = `${ condition.end } ${ condition.endTime || '23:59' }`;
+	const now = formatDate( 'Y-m-d H:i' );
+	const publication = postDate ? formatDate( 'Y-m-d H:i', postDate ) : '';
+
+	let message = '';
+	if ( now > endFull ) {
+		message = __( 'This date range is over: the popup is no longer shown.', 'wp-popup-manager' );
+	} else if ( publication > now && publication > endFull ) {
+		message = __( 'This date range ends before the scheduled publication: the popup will never be shown.', 'wp-popup-manager' );
+	}
+
+	return message ? (
+		<Notice status="warning" isDismissible={ false }>
+			{ message }
+		</Notice>
+	) : null;
+}
+
+/**
  * Display Conditions panel.
  */
 function ConditionsPanel() {
@@ -367,6 +432,7 @@ function ConditionsPanel() {
 								updateCondition( 'date_range', { endTime: value } )
 							}
 						/>
+						<DateRangeWarning condition={ dateCondition } />
 					</>
 				) }
 			{ /* Time range (daily recurring — happy hour) */ }
@@ -743,6 +809,7 @@ function FrequencyPanel() {
 registerPlugin( 'popup-manager-sidebar', {
 	render: () => (
 		<>
+			<EnabledToggle />
 			<TriggerPanel />
 			<ConditionsPanel />
 			<DisplayPanel />
