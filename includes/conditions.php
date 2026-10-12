@@ -61,6 +61,76 @@ function popup_manager_conditions_met( WP_Post $popup, int $queried_object_id ):
 }
 
 /**
+ * ID of the single content being displayed, 0 elsewhere (archives, search,
+ * blog home without a posts page).
+ *
+ * get_queried_object_id() returns a term ID on a term archive: compared with
+ * post IDs, it could match a page of the same ID.
+ *
+ * @return int
+ */
+function popup_manager_current_post_id(): int {
+	return get_queried_object() instanceof WP_Post ? (int) get_queried_object_id() : 0;
+}
+
+/**
+ * "Taxonomy" condition: the displayed content must have terms of the taxonomy
+ * (prerequisite, in both modes), and one of the chosen terms ("include") or
+ * none of them ("exclude").
+ *
+ * On a term archive of the same taxonomy (unless the "archives" option is
+ * off), the archived term is checked the same way. Other archives, the home
+ * page and the search never match.
+ *
+ * @param array $condition Condition: taxonomy, ids (term IDs), operator, children, archives.
+ * @param int   $post_id   Displayed content, 0 when not a single content.
+ * @return bool
+ */
+function popup_manager_evaluate_taxonomy( array $condition, int $post_id ): bool {
+	$taxonomy = $condition['taxonomy'] ?? '';
+	$ids      = array_filter( array_map( 'absint', (array) ( $condition['ids'] ?? array() ) ) );
+
+	// Incomplete condition: no restriction, like the other conditions.
+	if ( '' === $taxonomy || empty( $ids ) ) {
+		return true;
+	}
+
+	if ( ! taxonomy_exists( $taxonomy ) ) {
+		return false;
+	}
+
+	if ( $post_id ) {
+		$current_terms = get_the_terms( $post_id, $taxonomy );
+		$current_terms = is_array( $current_terms ) ? wp_list_pluck( $current_terms, 'term_id' ) : array();
+	} else {
+		$queried       = get_queried_object();
+		$on_archive    = $queried instanceof WP_Term && $taxonomy === $queried->taxonomy && ( $condition['archives'] ?? true );
+		$current_terms = $on_archive ? array( $queried->term_id ) : array();
+	}
+
+	if ( empty( $current_terms ) ) {
+		return false;
+	}
+
+	// Translations of the chosen terms match too.
+	$targets = popup_manager_pll_with_translations( $ids, 'term' );
+
+	if ( ( $condition['children'] ?? true ) && is_taxonomy_hierarchical( $taxonomy ) ) {
+		foreach ( $targets as $term_id ) {
+			$children = get_term_children( $term_id, $taxonomy );
+
+			if ( is_array( $children ) ) {
+				$targets = array_merge( $targets, array_map( 'absint', $children ) );
+			}
+		}
+	}
+
+	$has_term = (bool) array_intersect( array_map( 'absint', $current_terms ), $targets );
+
+	return 'exclude' === ( $condition['operator'] ?? 'include' ) ? ! $has_term : $has_term;
+}
+
+/**
  * Retrieve all published popups (with transient cache).
  *
  * @return WP_Post[]
@@ -148,9 +218,17 @@ function popup_manager_evaluate_condition( array $condition, int $queried_object
 				return true;
 			}
 
+			// Only a single content has a content type (not an archive, not the search).
+			if ( ! $queried_object_id ) {
+				return false;
+			}
+
 			$current_post_type = get_post_type( $queried_object_id );
 
 			return in_array( $current_post_type, $values, true );
+
+		case 'taxonomy':
+			return popup_manager_evaluate_taxonomy( $condition, $queried_object_id );
 
 		case 'date_range':
 			$now       = current_time( 'Y-m-d H:i' );

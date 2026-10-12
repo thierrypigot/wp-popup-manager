@@ -274,6 +274,120 @@ function PageSelector( { ids, operator, onChangeIds, onChangeOperator } ) {
 }
 
 /**
+ * Post types whose taxonomies cannot target a displayed content.
+ */
+const INTERNAL_POST_TYPES = [ 'nav_menu_item', 'wp_block', 'wp_template', 'wp_template_part', 'wp_navigation', 'wp_global_styles', 'wp_font_family', 'wp_font_face', 'popup' ];
+
+/**
+ * Taxonomy and terms selector for the "Taxonomy" condition.
+ * One taxonomy, several terms, stored by ID.
+ *
+ * @since 1.3.0
+ */
+function TaxonomySelector( { condition, onChange } ) {
+	const taxonomySlug = condition?.taxonomy || '';
+
+	const taxonomies = useSelect(
+		( select ) =>
+			// The view context also lists the taxonomies whose terms the user cannot assign.
+			( select( 'core' ).getTaxonomies( { per_page: -1, context: 'view' } ) || [] ).filter( ( taxonomy ) =>
+				( taxonomy.types || [] ).some( ( type ) => ! INTERNAL_POST_TYPES.includes( type ) )
+			),
+		[]
+	);
+
+	const current = taxonomies.find( ( taxonomy ) => taxonomy.slug === taxonomySlug );
+
+	const terms = useSelect(
+		( select ) =>
+			current
+				? select( 'core' ).getEntityRecords( 'taxonomy', current.slug, {
+						per_page: 100,
+						_fields: 'id,name,parent',
+						orderby: 'name',
+						order: 'asc',
+				  } ) || []
+				: [],
+		[ current?.slug ]
+	);
+
+	// Token label: the term name, with its parent for hierarchical taxonomies.
+	const byId = {};
+	terms.forEach( ( term ) => {
+		byId[ term.id ] = term;
+	} );
+	const labelOf = ( term ) => {
+		const parent = term.parent ? byId[ term.parent ] : null;
+		return parent ? `${ parent.name } › ${ term.name }` : term.name;
+	};
+	const labelToId = {};
+	terms.forEach( ( term ) => {
+		labelToId[ labelOf( term ) ] = term.id;
+	} );
+
+	const ids = condition?.ids || [];
+	const tokens = ids.map( ( id ) => ( byId[ id ] ? labelOf( byId[ id ] ) : `#${ id }` ) );
+
+	return (
+		<>
+			<SelectControl
+				label={ __( 'Taxonomy', 'wp-popup-manager' ) }
+				value={ taxonomySlug }
+				options={ [
+					{ value: '', label: __( 'Choose a taxonomy', 'wp-popup-manager' ) },
+					...taxonomies.map( ( taxonomy ) => ( { value: taxonomy.slug, label: taxonomy.name } ) ),
+				] }
+				onChange={ ( taxonomy ) => onChange( { taxonomy, ids: [] } ) }
+			/>
+			{ current && (
+				<>
+					<SelectControl
+						label={ __( 'Operator', 'wp-popup-manager' ) }
+						value={ condition?.operator || 'include' }
+						options={ [
+							{ value: 'include', label: __( 'Only these terms', 'wp-popup-manager' ) },
+							{ value: 'exclude', label: __( 'All terms except these', 'wp-popup-manager' ) },
+						] }
+						onChange={ ( operator ) => onChange( { operator } ) }
+					/>
+					<FormTokenField
+						label={ __( 'Terms', 'wp-popup-manager' ) }
+						value={ tokens }
+						suggestions={ terms.map( labelOf ) }
+						onChange={ ( newTokens ) =>
+							onChange( {
+								ids: newTokens
+									.map( ( token ) => labelToId[ token ] ?? ( /^#\d+$/.test( token ) ? Number( token.slice( 1 ) ) : 0 ) )
+									.filter( Boolean ),
+							} )
+						}
+						__experimentalExpandOnFocus
+					/>
+					{ current.hierarchical && (
+						<ToggleControl
+							label={ __( 'Include child terms', 'wp-popup-manager' ) }
+							checked={ condition?.children ?? true }
+							onChange={ ( children ) => onChange( { children } ) }
+						/>
+					) }
+					<ToggleControl
+						label={ __( 'Also on the archives of these terms', 'wp-popup-manager' ) }
+						checked={ condition?.archives ?? true }
+						onChange={ ( archives ) => onChange( { archives } ) }
+					/>
+					<p className="components-base-control__help">
+						{ __(
+							'Only applies to contents that have terms of this taxonomy, and to the archives of its terms. The home page, other archives and contents without terms never match.',
+							'wp-popup-manager'
+						) }
+					</p>
+				</>
+			) }
+		</>
+	);
+}
+
+/**
  * Warning when the date range prevents the popup from ever showing:
  * range already over, or ending before the scheduled publication.
  * Same comparison as the server: site local time, Y-m-d H:i strings.
@@ -331,6 +445,7 @@ function ConditionsPanel() {
 
 	const pageCondition = getCondition( 'page' );
 	const postTypeCondition = getCondition( 'post_type' );
+	const taxonomyCondition = getCondition( 'taxonomy' );
 	const dateCondition = getCondition( 'date_range' );
 	const timeCondition = getCondition( 'time_range' );
 	const userRoleCondition = getCondition( 'user_role' );
@@ -383,6 +498,25 @@ function ConditionsPanel() {
 						value={ postTypeCondition?.values || [] }
 						suggestions={ [ 'post', 'page', 'product', 'popup' ] }
 						onChange={ ( values ) => updateCondition( 'post_type', { values } ) }
+					/>
+				) }
+
+				{ /* Taxonomy */ }
+				<ToggleControl
+					label={ __( 'Taxonomy', 'wp-popup-manager' ) }
+					checked={ hasCondition( 'taxonomy' ) }
+					onChange={ ( checked ) => {
+						if ( checked ) {
+							updateCondition( 'taxonomy', { taxonomy: '', ids: [], operator: 'include', children: true, archives: true } );
+						} else {
+							removeCondition( 'taxonomy' );
+						}
+					} }
+				/>
+				{ hasCondition( 'taxonomy' ) && (
+					<TaxonomySelector
+						condition={ taxonomyCondition }
+						onChange={ ( data ) => updateCondition( 'taxonomy', data ) }
 					/>
 				) }
 

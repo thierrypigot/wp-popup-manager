@@ -22,7 +22,7 @@ function popup_manager_maybe_enqueue(): void {
 		return;
 	}
 
-	$queried_object_id = get_queried_object_id();
+	$queried_object_id = popup_manager_current_post_id();
 	$active_popups     = popup_manager_get_matching( $queried_object_id );
 
 	if ( empty( $active_popups ) ) {

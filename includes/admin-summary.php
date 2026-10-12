@@ -215,6 +215,35 @@ function popup_manager_summary_conditions( array $conditions, int $post_id ): ar
 				$chips[] = array( 'label' => implode( ', ', $names ) );
 				break;
 
+			case 'taxonomy':
+				$taxonomy = get_taxonomy( $condition['taxonomy'] ?? '' );
+				$term_ids = array_filter( array_map( 'absint', (array) ( $condition['ids'] ?? array() ) ) );
+
+				if ( ! $taxonomy || ! $term_ids ) {
+					break;
+				}
+
+				$names = array();
+				foreach ( $term_ids as $term_id ) {
+					$term    = get_term( $term_id, $taxonomy->name );
+					$names[] = $term instanceof WP_Term ? $term->name : '#' . $term_id;
+				}
+
+				$format = $exclude
+					/* translators: 1: taxonomy name, 2: list of terms. */
+					? __( '%1$s: all except %2$s', 'wp-popup-manager' )
+					/* translators: 1: taxonomy name, 2: list of terms. */
+					: __( '%1$s: %2$s', 'wp-popup-manager' );
+
+				$chips[] = array(
+					'label' => sprintf( $format, $taxonomy->labels->name, implode( ', ', $names ) ),
+					'title' => implode( ' · ', array_filter( array(
+						is_taxonomy_hierarchical( $taxonomy->name ) && ( $condition['children'] ?? true ) ? __( 'Child terms included', 'wp-popup-manager' ) : '',
+						( $condition['archives'] ?? true ) ? __( 'Term archives included', 'wp-popup-manager' ) : __( 'Contents only, not the archives', 'wp-popup-manager' ),
+					) ) ),
+				);
+				break;
+
 			case 'date_range':
 				$chip = popup_manager_summary_date_range( $condition, $post_id );
 				if ( $chip ) {

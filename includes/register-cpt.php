@@ -113,7 +113,7 @@ function popup_manager_register_meta(): void {
 					'properties' => array(
 						'type'     => array(
 							'type' => 'string',
-							'enum' => array( 'page', 'post_type', 'date_range', 'time_range', 'user_role', 'device', 'referrer' ),
+							'enum' => array( 'page', 'post_type', 'taxonomy', 'date_range', 'time_range', 'user_role', 'device', 'referrer' ),
 						),
 						'ids'      => array(
 							'type'  => 'array',
@@ -133,6 +133,9 @@ function popup_manager_register_meta(): void {
 						'end'       => array( 'type' => 'string' ),
 						'endTime'   => array( 'type' => 'string' ),
 						'pattern'   => array( 'type' => 'string' ),
+						'taxonomy'  => array( 'type' => 'string' ),
+						'children'  => array( 'type' => 'boolean' ),
+						'archives'  => array( 'type' => 'boolean' ),
 					),
 				),
 			),
@@ -316,7 +319,7 @@ function popup_manager_sanitize_conditions( $value ): array {
 		return array();
 	}
 
-	$allowed_types = array( 'page', 'post_type', 'date_range', 'time_range', 'user_role', 'device', 'referrer' );
+	$allowed_types = array( 'page', 'post_type', 'taxonomy', 'date_range', 'time_range', 'user_role', 'device', 'referrer' );
 
 	return array_values( array_filter( array_map( function ( $item ) use ( $allowed_types ) {
 		if ( ! is_array( $item ) || empty( $item['type'] ) || ! in_array( $item['type'], $allowed_types, true ) ) {
@@ -350,6 +353,15 @@ function popup_manager_sanitize_conditions( $value ): array {
 		}
 		if ( isset( $item['pattern'] ) ) {
 			$clean['pattern'] = sanitize_text_field( $item['pattern'] );
+		}
+		if ( isset( $item['taxonomy'] ) ) {
+			$clean['taxonomy'] = sanitize_key( $item['taxonomy'] );
+		}
+		if ( isset( $item['children'] ) ) {
+			$clean['children'] = rest_sanitize_boolean( $item['children'] );
+		}
+		if ( isset( $item['archives'] ) ) {
+			$clean['archives'] = rest_sanitize_boolean( $item['archives'] );
 		}
 
 		return $clean;

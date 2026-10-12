@@ -57,7 +57,7 @@ WP Popup Manager est une extension WordPress de gestion de popups conçue de A �
 1. Créez une nouvelle popup (Popups > Ajouter)
 2. Ajoutez du contenu avec des blocs Gutenberg
 3. Configurez le déclencheur dans la barre latérale (clic, chargement de page, défilement, section atteinte, exit intent, inactivité)
-4. Définissez les conditions d'affichage (pages, types de contenu, plage de dates, heure, rôle utilisateur, appareil, référent)
+4. Définissez les conditions d'affichage (pages, types de contenu, taxonomie, plage de dates, heure, rôle utilisateur, appareil, référent)
 5. Choisissez l'apparence (animation, grille de position, taille, overlay avec pipette de couleur)
 6. Définissez la fréquence (à chaque visite, une fois par session, une fois par jour, une seule fois)
 7. Activez optionnellement les analytics (suivi des impressions et fermetures via Beacon API)
@@ -170,6 +170,8 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 * Les réglages qui empêchent l'affichage sont signalés en rouge dans la liste : plage de dates terminée, plage qui se termine avant la publication planifiée, section sans ancre. L'éditeur affiche aussi un avertissement sous la plage de dates
 * Compatibilité Polylang : les popups peuvent être traduites (à activer dans Langues > Réglages). Sur le site, seules les popups de la langue de la page, ou sans langue, sont affichées. Un bouton déclencheur ouvre la traduction publiée de sa popup dans la langue de la page. Sans traduction publiée, il ouvre la popup d'origine plutôt que de ne rien faire. La condition « Pages spécifiques » couvre aussi les traductions des pages choisies. Créer une traduction recopie les réglages de la popup, jamais ses statistiques
 * Les popups existantes restent actives par défaut
+* Nouvelle condition d'affichage « Taxonomie » : choisir une taxonomie et un ou plusieurs termes, puis afficher la popup uniquement sur les contenus qui ont ces termes, ou sur ceux qui ont des termes de cette taxonomie sauf ceux-là. Les termes enfants et les pages d'archive de ces termes sont inclus par défaut (chacun désactivable). La page d'accueil, les autres archives et les contenus sans terme de la taxonomie ne sont jamais concernés. Avec Polylang, les traductions des termes comptent aussi
+* Correctif : sur une archive (catégorie, terme, auteur…), les conditions « Pages spécifiques » et « Types de contenu » recevaient l'identifiant de l'archive et pouvaient le confondre avec celui d'une page. Elles ne s'appliquent plus qu'aux contenus seuls
 
 = 1.2.1 =
 * Correction : la couleur du voile choisie avec transparence (sélecteur de couleur, format #rrggbbaa) n'était pas enregistrée et revenait à la couleur par défaut. Les formes hexadécimales #rgb, #rgba, #rrggbb et #rrggbbaa sont désormais acceptées

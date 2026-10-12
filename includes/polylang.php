@@ -6,7 +6,8 @@
  *   Polylang does not list it by itself). Translation stays opt-in.
  * - When popups are translated, only the popups in the current language, or
  *   without language, are shown on the front.
- * - "Specific pages" conditions also match the translations of the chosen pages.
+ * - "Specific pages" and "Taxonomy" conditions also match the translations of
+ *   the chosen pages and terms.
  * - A trigger button opens the translation of its popup in the current language.
  *   Without a published translation, the original popup is loaded anyway, so
  *   that the button never does nothing.
@@ -96,20 +97,23 @@ function popup_manager_pll_filter_language( array $popups ): array {
 }
 
 /**
- * Add the translations of the given posts.
+ * Add the translations of the given posts or terms.
  *
- * @param int[] $ids Post IDs.
+ * @param int[]  $ids  Post or term IDs.
+ * @param string $kind 'post' or 'term'.
  * @return int[]
  */
-function popup_manager_pll_with_translations( array $ids ): array {
-	if ( ! function_exists( 'pll_get_post_translations' ) ) {
+function popup_manager_pll_with_translations( array $ids, string $kind = 'post' ): array {
+	$callback = 'term' === $kind ? 'pll_get_term_translations' : 'pll_get_post_translations';
+
+	if ( ! function_exists( $callback ) ) {
 		return $ids;
 	}
 
 	$all = $ids;
 
 	foreach ( $ids as $id ) {
-		$all = array_merge( $all, array_map( 'absint', array_values( pll_get_post_translations( $id ) ) ) );
+		$all = array_merge( $all, array_map( 'absint', array_values( (array) $callback( $id ) ) ) );
 	}
 
 	return array_values( array_unique( $all ) );
@@ -183,7 +187,7 @@ function popup_manager_pll_fallback_popups(): array {
 			|| $current === $language // Same language: already handled by the regular flow.
 			|| ! popup_manager_is_enabled( $popup->ID )
 			|| '' !== popup_manager_get_section_anchor( $popup )
-			|| ! popup_manager_conditions_met( $popup, get_queried_object_id() )
+			|| ! popup_manager_conditions_met( $popup, popup_manager_current_post_id() )
 		) {
 			continue;
 		}
