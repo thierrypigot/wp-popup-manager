@@ -34,9 +34,7 @@ function popup_manager_maybe_enqueue(): void {
 	// No "section reached" popup: everything is known now.
 	if ( empty( $anchors ) ) {
 		add_action( 'wp_enqueue_scripts', 'popup_manager_enqueue_assets' );
-		add_action( 'wp_footer', function () use ( $active_popups ) {
-			popup_manager_print_popups( $active_popups );
-		} );
+		popup_manager_schedule_popups( fn() => $active_popups );
 		return;
 	}
 
@@ -78,9 +76,7 @@ function popup_manager_maybe_enqueue(): void {
 		}
 	}, 1 );
 
-	add_action( 'wp_footer', function () use ( $resolve ) {
-		popup_manager_print_popups( $resolve() );
-	} );
+	popup_manager_schedule_popups( $resolve );
 }
 
 /**
@@ -104,7 +100,8 @@ function popup_manager_enqueue_assets(): void {
 }
 
 /**
- * Print the popups HTML.
+ * Render and print popups on the spot. Only for popups discovered too late to
+ * be scheduled (Polylang fallback).
  *
  * @param WP_Post[] $popups Popups to print.
  */
@@ -113,6 +110,36 @@ function popup_manager_print_popups( array $popups ): void {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- popup_manager_render_popup escapes internally.
 		echo popup_manager_render_popup( $popup );
 	}
+}
+
+/**
+ * Render the popups early, print them in the footer.
+ *
+ * Rendering blocks generates CSS (layout, block style variations, element
+ * colors) that WordPress only collects until it compiles its stylesheets:
+ * in wp_enqueue_scripts for a block theme, at wp_footer priority 1 for a
+ * classic theme. Rendering later would silently drop those styles.
+ *
+ * @param callable $get_popups Returns the WP_Post[] popups to render.
+ */
+function popup_manager_schedule_popups( callable $get_popups ): void {
+	$html = '';
+
+	// Priority 0: before core enqueues the block style variation styles (1).
+	add_action(
+		wp_is_block_theme() ? 'wp_enqueue_scripts' : 'wp_footer',
+		function () use ( $get_popups, &$html ) {
+			foreach ( $get_popups() as $popup ) {
+				$html .= popup_manager_render_popup( $popup );
+			}
+		},
+		0
+	);
+
+	add_action( 'wp_footer', function () use ( &$html ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- popup_manager_render_popup escapes internally.
+		echo $html;
+	} );
 }
 
 /**

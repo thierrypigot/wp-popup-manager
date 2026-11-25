@@ -4,7 +4,7 @@ Tags: popup, modal, gutenberg, accessible, interactivity-api
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,9 @@ Les popups créées avant la version 1.1.0 n'ont pas de bloc Popup à la racine 
 - Page d'administration React
 
 == Changelog ==
+
+= 1.4.2 =
+* Correction : les styles des blocs placés dans une popup s'affichent désormais sur le site comme dans l'éditeur (variations de style, par exemple la couleur d'un bouton, mise en page des groupes et des boutons, couleurs des liens). Les popups sont désormais préparées avant la génération des feuilles de style de WordPress
 
 = 1.4.1 =
 * Ajout de l'en-tête « Update URI » : WordPress n'interroge plus WordPress.org pour cette extension, et une extension homonyme publiée là-bas ne pourra jamais être proposée en mise à jour à sa place. Les mises à jour continuent d'arriver depuis GitHub
